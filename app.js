@@ -202,13 +202,13 @@ function updateUI(){
       diffTekst=`<span class="${r.diff>=0?'green':'red'}">${r.diff>=0?'+':''} ${kr(Math.abs(r.diff))}</span>`;
     }
     html+=`<tr${cls}>
-      <td>${MONTHS_K[i]}${r.erSpesial?' ★':''}</td><td>${r.arb}</td><td>${r.faktTimer.toFixed(1)}</td>
+      <td>${MONTHS_K[i]}${r.erSpesial?' ★':''}</td><td class="col-arb">${r.arb}</td><td class="col-fakt">${r.faktTimer.toFixed(1)}</td>
       <td>${kr(r.omsetning)}</td><td>${kr(r.gml)}</td>
       <td>${nyTekst}</td><td>${garTekst}</td><td>${diffTekst}</td>
     </tr>`;
   });
   const garTotal26=rows26.filter(r=>r.fase==='ny').reduce((s,r)=>s+r.garantiAndel,0);
-  html+=`<tr class="total-row"><td>Totalt</td><td>–</td><td>–</td>
+  html+=`<tr class="total-row"><td>Totalt</td><td class="col-arb">–</td><td class="col-fakt">–</td>
     <td>${kr(omsetningTotal26)}</td><td>${kr(gmlTotal26)}</td>
     <td class="blue">${kr(overgangsSum)}</td>
     <td class="blue">${garTotal26>0?kr(garTotal26):'–'}</td>
@@ -221,14 +221,14 @@ function updateUI(){
     const cls=r.erSpesial?' class="special-row"':'';
     const garTekst=r.garantiAndel>0?`<span style="color:#185fa5">${kr(r.garantiAndel)}</span>`:`<span style="color:#bbb">–</span>`;
     html27+=`<tr${cls}>
-      <td>${MONTHS_K[i]}${r.erSpesial?' ★':''}</td><td>${r.arb}</td><td>${r.faktTimer.toFixed(1)}</td>
+      <td>${MONTHS_K[i]}${r.erSpesial?' ★':''}</td><td class="col-arb">${r.arb}</td><td class="col-fakt">${r.faktTimer.toFixed(1)}</td>
       <td>${kr(r.omsetning)}</td><td>${kr(r.gml)}</td>
       <td class="blue">${kr(r.ny)}</td><td>${garTekst}</td>
       <td class="${r.diff>=0?'green':'red'}">${r.diff>=0?'+':''} ${kr(Math.abs(r.diff))}</td>
     </tr>`;
   });
   const garTotal27=rows27.reduce((s,r)=>s+r.garantiAndel,0);
-  html27+=`<tr class="total-row"><td>Totalt</td><td>–</td><td>–</td>
+  html27+=`<tr class="total-row"><td>Totalt</td><td class="col-arb">–</td><td class="col-fakt">–</td>
     <td>${kr(omsetningTotal27)}</td><td>${kr(gmlTotal27)}</td>
     <td class="blue">${kr(nyTotal27)}</td>
     <td class="blue">${garTotal27>0?kr(garTotal27):'–'}</td>
