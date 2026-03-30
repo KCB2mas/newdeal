@@ -54,9 +54,28 @@
 
   <div class="card">
     <div class="section-hdr">Ny modell</div>
-    <div>
-      <span class="lbl">Prosentsats: <strong id="ny-pct-val">46%</strong></span>
+    <div style="margin-bottom:12px">
+      <span class="lbl">Basissats: <strong id="ny-pct-val">46%</strong></span>
       <input type="range" id="ny-prosentsats" min="0.43" max="0.54" step="0.01" value="0.46" oninput="document.getElementById('ny-pct-val').textContent=Math.round(this.value*100)+'%';updateUI()">
+    </div>
+    <div style="border-top:0.5px solid #eee;padding-top:10px;margin-bottom:10px">
+      <span class="lbl" style="margin-bottom:6px">Tilvalg (kan kombineres)</span>
+      <label style="display:flex;align-items:flex-start;gap:8px;margin-bottom:8px;cursor:pointer">
+        <input type="checkbox" id="tilvalg-m3" onchange="updateUI()" style="margin-top:2px;width:16px;height:16px;flex-shrink:0">
+        <span style="font-size:12px;color:#444"><strong style="color:#b91c1c">−3%</strong> — Opptil 8,5G ved langtidssykdom og foreldreperm</span>
+      </label>
+      <label style="display:flex;align-items:flex-start;gap:8px;margin-bottom:8px;cursor:pointer">
+        <input type="checkbox" id="tilvalg-p2" onchange="updateUI()" style="margin-top:2px;width:16px;height:16px;flex-shrink:0">
+        <span style="font-size:12px;color:#444"><strong style="color:#1a7a3d">+2%</strong> — Halvert garantilønn (3G) ved ledighet</span>
+      </label>
+      <label style="display:flex;align-items:flex-start;gap:8px;cursor:pointer">
+        <input type="checkbox" id="tilvalg-p4" onchange="updateUI()" style="margin-top:2px;width:16px;height:16px;flex-shrink:0">
+        <span style="font-size:12px;color:#444"><strong style="color:#1a7a3d">+4%</strong> — Ingen garantilønn ved ledighet</span>
+      </label>
+    </div>
+    <div style="background:#f0f0ec;border-radius:8px;padding:10px;text-align:center">
+      <div style="font-size:11px;color:#666;margin-bottom:2px">Effektiv sats</div>
+      <div id="effektiv-sats" style="font-size:24px;font-weight:500;color:#185fa5">46%</div>
     </div>
   </div>
 

@@ -55,6 +55,14 @@ function getParams(){
   const feriepenger=+document.getElementById('feriepenger').value||0;
   const feriedagerIgjen=+document.getElementById('feriedager-igjen').value||0;
   const nyPct=+document.getElementById('ny-prosentsats').value||0.46;
+  // Tilvalg
+  const tilvalgM3=document.getElementById('tilvalg-m3')?.checked||false;
+  const tilvalgP2=document.getElementById('tilvalg-p2')?.checked||false;
+  const tilvalgP4=document.getElementById('tilvalg-p4')?.checked||false;
+  const tilvalgJustering=(tilvalgM3?-0.03:0)+(tilvalgP2?0.02:0)+(tilvalgP4?0.04:0);
+  const effektivSats=nyPct+tilvalgJustering;
+  const effEl=document.getElementById('effektiv-sats');
+  if(effEl) effEl.textContent=Math.round(effektivSats*100)+'%';
   const fastlonnActual=fastlonn*stilling;
   const innslagspunkt=fastlonnActual*1.5;
   const ferietrekkBasis=modell==='fp'?fastlonnActual:fastlonn;
@@ -63,12 +71,14 @@ function getParams(){
   const ferieJusteringNy=(feriedagerIgjen-25)*ferietrekkDag;
   const minGarantiMnd=+document.getElementById('mingaranti').value||66700;
   const garantilonn=800000/12;
-  const seksgG=130160*6;
-  const sykAarsbasis=Math.min(minGarantiMnd*12, seksgG);
+  const sykGrunnlag=tilvalgM3?(130160*8.5):(130160*6);
+  const sykAarsbasis=Math.min(minGarantiMnd*12, sykGrunnlag);
   const sykKompDag=modell==='fp'?sykAarsbasis/260:fastlonn/30;
+  const garantiGulvFaktor=tilvalgP4?0:tilvalgP2?0.5:1;
   const spesialMnd=4;
-  return{timepris,fastlonn,tillegg,stilling,provSats,feriepenger,nyPct,
-    fastlonnActual,innslagspunkt,ferietrekkDag,ferietrekkGml,ferieJusteringNy,sykKompDag,garantilonn,minGarantiMnd,spesialMnd};
+  return{timepris,fastlonn,tillegg,stilling,provSats,feriepenger,nyPct:effektivSats,
+    fastlonnActual,innslagspunkt,ferietrekkDag,ferietrekkGml,ferieJusteringNy,
+    sykKompDag,garantilonn,minGarantiMnd,garantiGulvFaktor,spesialMnd};
 }
 
 function beregnAar(p, feriepengerOverride, is2027=false){
@@ -103,7 +113,7 @@ function beregnAar(p, feriepengerOverride, is2027=false){
 
     const nyBase=omsetning*p.nyPct+f.syk*p.sykKompDag;
     const ikkeBetalingsdager=Math.min(arb,f.ferie+f.syk);
-    const proratertGaranti=p.minGarantiMnd*(arb-ikkeBetalingsdager)/arb;
+    const proratertGaranti=p.minGarantiMnd*(arb-ikkeBetalingsdager)/arb*p.garantiGulvFaktor;
     const garantiAndel=Math.max(0,proratertGaranti-nyBase);
     const nyMedGulv=nyBase<proratertGaranti?proratertGaranti:nyBase;
     const ferieJustering=(!is2027&&i===p.spesialMnd)?p.ferieJusteringNy:0;
