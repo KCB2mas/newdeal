@@ -206,6 +206,11 @@ function updateUI(){
   document.getElementById('innslagspunkt-vis').textContent=Math.round(p.innslagspunkt).toLocaleString('nb-NO')+' kr';
   const mndGarantiEl=document.getElementById('mnd-garanti-vis');
   if(mndGarantiEl) mndGarantiEl.textContent=kr(p.garantilonn);
+  const disclaimer85gEl=document.getElementById('disclaimer-85g');
+  if(disclaimer85gEl){
+    const gBelop=+document.getElementById('g-belop').value||G_DEFAULT;
+    disclaimer85gEl.textContent=kr(gBelop*8.5);
+  }
 
   const spesialNavn=modell==='fp'?'Mai':'Juni';
   const spesialUtbetalt=modell==='fp'?'juni':'juli';
