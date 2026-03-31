@@ -2,44 +2,34 @@
 
 ## [Unreleased]
 
-### Verifisert
-- Gått gjennom modellen opp mot avklart logikk:
-  - sykdom skal ikke redusere månedlig garantilønn
-  - feriedager og dager uten oppdrag skal redusere garantilønn
-  - sykekompensasjon skal være additiv
-  - tilvalg for ledighet skal påvirke garantigulvet
-  - stillingsprosent skal skalere månedlig garantilønn
-
-### Rettet
-- Korrigert grunnlaget for ikke-betalingsdager i `app.js` slik at reduksjon i garantilønn nå baseres på:
-  - `ferie + uten`
-  i stedet for:
-  - `ferie + syk`
-
-- Rettet for lav utbetaling i scenarier med sykdom ved å sikre at sykedager ikke lenger reduserer garantilønn.
-
 ### Endret
-- Månedlig garantilønn skaleres nå med stillingsprosent.
-- Garantigulvet oppdateres nå korrekt i tråd med valgte tilvalg:
-  - standard = 100 %
-  - `+2 %`-tilvalg = 50 %
-  - `+4 %`-tilvalg = 0 %
-- Sykekompensasjon forblir additiv og separat fra garantigulvet.
-- Logikken er nå konsistent på tvers av kombinasjoner av:
-  - sykdom
-  - ferie
-  - dager uten oppdrag
-  - redusert stillingsprosent
+- La til nytt inputfelt for `G pr 1.5.26` i UI, med `136000` som standard.
+- Månedlig garantilønn beregnes nå live i appen og vises i eget felt (ikke manuelt input):
+  - `6G / 12 × stillingsprosent × tilvalgsfaktor`
+- Garantidagsats og sykekompensasjon beregnes nå fra samme grunnlag:
+  - `6G / 260 × stillingsprosent × tilvalgsfaktor`
+- Garantigulv ved ledighet styres av tilvalg:
+  - standard = `1.0`
+  - `+2 %` = `0.5`
+  - `+4 %` = `0`
+- Fri/ferie-logikk er justert slik at kun `ferie` reduserer månedlig garanti.
+- `Dager uten fakturering` er tydeliggjort i UI som `Dager uten oppdrag`.
+
+### Presisering av regler
+- Sykdom reduserer ikke månedlig garantilønn direkte.
+- Dager uten oppdrag behandles ikke som fri/ferie i garantitrekket.
+- Ved kombinasjon av `syk + uten oppdrag` begrenses ny modell til maks månedlig garanti.
 
 ### Testet
-- Bekreftet at oppdatert kode kjører uten syntaksfeil.
-- Kontrollert scenarier med:
+- `node --check app.js` kjørt uten feil.
+- Kjørt manuelle simuleringer for scenarioer med:
+  - full fakturering
+  - kun uten oppdrag
+  - kun ferie
   - kun sykdom
-  - kun dager uten oppdrag
-  - kombinasjon av sykdom og dager uten oppdrag
-  - redusert stillingsprosent med ulike garanti-tilvalg
+  - kombinasjoner av ferie, sykdom og uten oppdrag
 
 ### Oppdaterte filer
 - `app.js`
 - `index.html`
-- `style.css`
+- `CHANGELOG.md`

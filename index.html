@@ -40,14 +40,18 @@
           <div class="inp-ro" id="innslagspunkt-vis">–</div>
         </div>
         <div>
-          <span class="lbl">Provisjonssats: <strong id="prov-val">35%</strong></span>
+          <span class="lbl">Provisjonssats gml modell: <strong id="prov-val">20%</strong></span>
           <input type="range" id="provisjonssats" min="0.10" max="0.60" step="0.01" value="0.35" oninput="document.getElementById('prov-val').textContent=Math.round(this.value*100)+'%';updateUI()">
         </div>
       </div>
       <div style="border-top:0.5px solid #eee;padding-top:10px;display:flex;flex-direction:column;gap:10px">
         <div><span class="lbl">Feriedager igjen 1. juni</span><input class="inp" type="number" id="feriedager-igjen" value="25" onchange="updateUI()"></div>
-        <div><span class="lbl">Feriepenger fra 2025 (kr)</span><input class="inp" type="number" id="feriepenger" value="115000" onchange="updateUI()"></div>
-        <div><span class="lbl">Min. månedlig garantilønn ny modell (kr)</span><input class="inp" type="number" id="mingaranti" value="66700" onchange="updateUI()"></div>
+        <div><span class="lbl">Feriepenger fra 2025 (kr)</span><input class="inp" type="number" id="feriepenger" value="100000" onchange="updateUI()"></div>
+        <div><span class="lbl">Estimert G pr 1.5.26 (kr)</span><input class="inp" type="number" id="g-belop" value="136000" onchange="updateUI()"></div>
+        <div>
+          <span class="lbl">Månedlig garanti ny modell (kr)</span>
+          <div class="inp-ro" id="mnd-garanti-vis">–</div>
+        </div>
       </div>
     </div>
   </div>
@@ -142,7 +146,7 @@
         <th style="text-align:left;width:80px">Måned</th>
         <th>Feriedager</th>
         <th>Sykedager</th>
-        <th>Dager u/fakturering</th>
+        <th>Dager uten oppdrag</th>
         <th class="col-fakt">Fakturert (t)</th>
         <th>Omsetning</th>
       </tr></thead>
