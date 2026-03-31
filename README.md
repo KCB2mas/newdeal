@@ -1,3 +1,3 @@
 # newdeal
 Overgang til ny lønnsmodell
-<a href="index.html">Prøv med egne tall her</a>
+<a href="https://kcb2mas.github.io/newdeal">Prøv med egne tall her</a>
