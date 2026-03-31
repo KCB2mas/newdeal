@@ -1,5 +1,6 @@
 const ARS_DAGER = 260;
 const G_DEFAULT = 136000; // 1. mai 2026
+const STORAGE_KEY = 'newdeal-state-v1';
 
 const MONTHS_K = ['Jan','Feb','Mar','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Des'];
 const ARB_DAGER = [21,20,22,19,18,22,23,21,22,22,21,20];
@@ -15,6 +16,61 @@ const fravær = Array.from({length:12},(_,i)=>({
   uten: 0
 }));
 
+function saveState(){
+  try{
+    const ids = [
+      'timepris','fastlonn','tillegg','stillingsprosent','provisjonssats',
+      'feriedager-igjen','feriepenger','g-belop','ny-prosentsats',
+      'tilvalg-m3','tilvalg-p2','tilvalg-p4'
+    ];
+    const values = {};
+    ids.forEach(id=>{
+      const el=document.getElementById(id);
+      if(!el) return;
+      values[id]=el.type==='checkbox'?el.checked:el.value;
+    });
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({
+      modell,
+      activeTab,
+      values,
+      fravær
+    }));
+  }catch(_e){}
+}
+
+function loadState(){
+  try{
+    const raw=localStorage.getItem(STORAGE_KEY);
+    if(!raw) return;
+    const state=JSON.parse(raw);
+    if(state?.values){
+      Object.entries(state.values).forEach(([id,val])=>{
+        const el=document.getElementById(id);
+        if(!el) return;
+        if(el.type==='checkbox') el.checked=!!val;
+        else el.value=val;
+      });
+    }
+    if(Array.isArray(state?.fravær)){
+      state.fravær.slice(0,12).forEach((v,i)=>{
+        if(!v) return;
+        fravær[i].ferie=+v.ferie||0;
+        fravær[i].syk=+v.syk||0;
+        fravær[i].uten=+v.uten||0;
+      });
+    }
+    if(state?.modell==='fp' || state?.modell==='fl') modell=state.modell;
+    if(['tabell','fravar','ar2027','graf'].includes(state?.activeTab)) activeTab=state.activeTab;
+  }catch(_e){}
+}
+
+function clearStoredState(){
+  try{
+    localStorage.removeItem(STORAGE_KEY);
+  }catch(_e){}
+  location.reload();
+}
+
 function kr(v){
   if(isNaN(v)||v===null) return '–';
   const s=Math.abs(Math.round(v)).toLocaleString('nb-NO');
@@ -27,7 +83,7 @@ function krShort(v){
   return Math.round(v).toString();
 }
 
-function setModell(m){
+function setModell(m, keepValues=false){
   modell=m;
   document.getElementById('btn-fp').classList.toggle('active',m==='fp');
   document.getElementById('btn-fl').classList.toggle('active',m==='fl');
@@ -35,8 +91,10 @@ function setModell(m){
   document.getElementById('modell-note').textContent=m==='fp'
     ?'Mai ★: feriepenger + garantilønn + provisjon utbetales 20. juni'
     :'Mai ★: feriepenger + garantilønn utbetales 20. juni';
-  if(m==='fl'){document.getElementById('fastlonn').value=90000;document.getElementById('feriepenger').value=114000;}
-  else{document.getElementById('fastlonn').value=65000;document.getElementById('feriepenger').value=115000;}
+  if(!keepValues){
+    if(m==='fl'){document.getElementById('fastlonn').value=90000;document.getElementById('feriepenger').value=114000;}
+    else{document.getElementById('fastlonn').value=65000;document.getElementById('feriepenger').value=115000;}
+  }
   updateUI();
 }
 
@@ -47,6 +105,7 @@ function setTab(t){
     document.getElementById('tab-'+id).classList.toggle('active',t===id);
   });
   if(t==='graf') setTimeout(renderChart,50);
+  saveState();
 }
 
 function getParams(){
@@ -137,6 +196,12 @@ function beregnAar(p, feriepengerOverride, is2027=false){
 
 function updateUI(){
   const p=getParams();
+  const stillingEl=document.getElementById('stilling-val');
+  if(stillingEl) stillingEl.textContent=Math.round((+document.getElementById('stillingsprosent').value||1)*100)+'%';
+  const provEl=document.getElementById('prov-val');
+  if(provEl) provEl.textContent=Math.round((+document.getElementById('provisjonssats').value||0)*100)+'%';
+  const nyPctEl=document.getElementById('ny-pct-val');
+  if(nyPctEl) nyPctEl.textContent=Math.round((+document.getElementById('ny-prosentsats').value||0.46)*100)+'%';
 
   document.getElementById('innslagspunkt-vis').textContent=Math.round(p.innslagspunkt).toLocaleString('nb-NO')+' kr';
   const mndGarantiEl=document.getElementById('mnd-garanti-vis');
@@ -262,15 +327,16 @@ function updateUI(){
     const f=fravær[i];
     fhtml+=`<tr>
       <td>${MONTHS_K[i]}</td>
-      <td style="text-align:center"><input class="fravær-inp" type="number" min="0" max="30" value="${f.ferie}" onchange="fravær[${i}].ferie=+this.value;updateUI()"></td>
-      <td style="text-align:center"><input class="fravær-inp" type="number" min="0" max="30" value="${f.syk}" onchange="fravær[${i}].syk=+this.value;updateUI()"></td>
-      <td style="text-align:center"><input class="fravær-inp" type="number" min="0" max="30" value="${f.uten}" onchange="fravær[${i}].uten=+this.value;updateUI()"></td>
+      <td style="text-align:center"><input class="fravær-inp" type="number" min="0" max="30" value="${f.ferie}" oninput="fravær[${i}].ferie=+this.value;updateUI()"></td>
+      <td style="text-align:center"><input class="fravær-inp" type="number" min="0" max="30" value="${f.syk}" oninput="fravær[${i}].syk=+this.value;updateUI()"></td>
+      <td style="text-align:center"><input class="fravær-inp" type="number" min="0" max="30" value="${f.uten}" oninput="fravær[${i}].uten=+this.value;updateUI()"></td>
       <td>${r.faktTimer.toFixed(1)}</td><td>${kr(r.omsetning)}</td>
     </tr>`;
   });
   document.getElementById('fravar-body').innerHTML=fhtml;
 
   if(activeTab==='graf') renderChart(rows26);
+  saveState();
 }
 
 function renderChart(rows){
@@ -293,4 +359,15 @@ function renderChart(rows){
   });
 }
 
+const resetLink=document.getElementById('reset-values-link');
+if(resetLink){
+  resetLink.addEventListener('click', (e)=>{
+    e.preventDefault();
+    clearStoredState();
+  });
+}
+
+loadState();
+setModell(modell, true);
+setTab(activeTab);
 updateUI();
