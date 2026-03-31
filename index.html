@@ -106,7 +106,7 @@
 
   <div class="tab-bar">
     <button class="tab-btn active" onclick="setTab('tabell')" id="tab-tabell">2026 månedlig</button>
-    <button class="tab-btn" onclick="setTab('fravar')" id="tab-fravar">Ferie & fravær</button>
+    <button class="tab-btn" onclick="setTab('fravar')" id="tab-fravar">Ferie & fravær (dager)</button>
     <button class="tab-btn" onclick="setTab('ar2027')" id="tab-ar2027">2027 helår</button>
     <button class="tab-btn" onclick="setTab('graf')" id="tab-graf">Graf</button>
   </div>
@@ -117,7 +117,7 @@
       Tabellen viser <strong style="color:#1a1a18;font-weight:500">opptjeningsmåned</strong> — lønn utbetales den 20. påfølgende måned.
       <span id="juni-note-2026"> Mai ★ er spesialmåned i 2026: feriepenger + grunnlønn utbetales samlet 20. juni.</span>
     </div>
-    <div style="overflow-x:auto">
+    <div class="table-wrap">
     <table class="tbl">
       <thead><tr>
         <th style="text-align:left;width:80px">Opptjent</th>
@@ -152,12 +152,15 @@
 
   <!-- Fravær -->
   <div class="card" id="content-fravar" style="display:none">
-    <div style="overflow-x:auto">
+    <div style="font-size:12px;color:#888;margin-bottom:10px;padding-bottom:10px;border-bottom:0.5px solid #eee;">
+      Registrer antall <strong style="color:#1a1a18;font-weight:500">dager</strong> per måned.
+    </div>
+    <div class="table-wrap">
     <table class="tbl">
       <thead><tr>
         <th style="text-align:left;width:80px">Måned</th>
         <th>Feriedager</th>
-        <th>Sykedager</th>
+        <th>Syk/sykt barn/permisjon</th>
         <th>Dager uten oppdrag</th>
         <th class="col-fakt">Fakturert (t)</th>
         <th>Omsetning</th>
@@ -180,7 +183,7 @@
         Tabellen viser <strong style="color:#1a1a18;font-weight:500">opptjeningsmåned</strong> — lønn utbetales den 20. påfølgende måned.
         Feriepenger beregnet som 12% av 2026-lønn. Ingen spesialmåned i 2027.
       </div>
-      <div style="overflow-x:auto">
+      <div class="table-wrap">
       <table class="tbl">
         <thead><tr>
           <th style="text-align:left;width:80px">Opptjent</th>

@@ -31,6 +31,21 @@ h1{font-size:20px;font-weight:500;margin-bottom:4px}
 .info-box{padding:10px 12px;border-radius:8px;background:#eef4fc;border:0.5px solid #c5d9ef;font-size:12px;color:#185fa5;margin-bottom:12px}
 .params-toggle{display:none;width:100%;padding:12px 14px;border-radius:10px;border:0.5px solid #ddd;background:#f0f0ec;cursor:pointer;font-size:14px;font-weight:500;color:#1a1a18;margin-bottom:10px;text-align:left;touch-action:manipulation}
 .col-arb,.col-fakt{}
+.table-wrap{
+  overflow-x:auto;
+  -webkit-overflow-scrolling:touch;
+}
+/* Keep month column visible while horizontal scrolling */
+.tbl th:first-child,
+.tbl td:first-child{
+  position:sticky;
+  left:0;
+  z-index:1;
+}
+.tbl th:first-child{background:#fff;z-index:2}
+.tbl td:first-child{background:#fff}
+.tbl tr.total-row td:first-child{background:#f0f0ec}
+.tbl tr.special-row td:first-child{background:#eef4fc}
 @media(max-width:700px){
   body{padding:10px}
   h1{font-size:17px}
@@ -49,6 +64,20 @@ h1{font-size:20px;font-weight:500;margin-bottom:4px}
   .tab-btn{flex:1;text-align:center;padding:10px 4px;font-size:12px}
   .col-arb,.col-fakt{display:none}
   .tbl th,.tbl td{padding:7px 6px;font-size:11px}
+  #content-tabell .tbl th:nth-child(4),
+  #content-tabell .tbl td:nth-child(4),
+  #content-tabell .tbl th:nth-child(5),
+  #content-tabell .tbl td:nth-child(5),
+  #content-ar2027 .tbl th:nth-child(4),
+  #content-ar2027 .tbl td:nth-child(4),
+  #content-ar2027 .tbl th:nth-child(5),
+  #content-ar2027 .tbl td:nth-child(5){
+    display:none;
+  }
+  #content-fravar .tbl th:nth-child(6),
+  #content-fravar .tbl td:nth-child(6){
+    display:none;
+  }
   .fravær-inp{width:52px;font-size:15px;padding:7px 4px}
   .card{padding:12px}
   input[type=range]{height:28px}
