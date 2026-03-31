@@ -68,10 +68,14 @@ h1{font-size:20px;font-weight:500;margin-bottom:4px}
   #content-tabell .tbl td:nth-child(4),
   #content-tabell .tbl th:nth-child(5),
   #content-tabell .tbl td:nth-child(5),
+  #content-tabell .tbl th:nth-child(7),
+  #content-tabell .tbl td:nth-child(7),
   #content-ar2027 .tbl th:nth-child(4),
   #content-ar2027 .tbl td:nth-child(4),
   #content-ar2027 .tbl th:nth-child(5),
-  #content-ar2027 .tbl td:nth-child(5){
+  #content-ar2027 .tbl td:nth-child(5),
+  #content-ar2027 .tbl th:nth-child(7),
+  #content-ar2027 .tbl td:nth-child(7){
     display:none;
   }
   #content-fravar .tbl th:nth-child(6),
