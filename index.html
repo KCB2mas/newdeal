@@ -98,17 +98,20 @@
 </div><!-- /left col -->
 
 <div><!-- right col -->
-  <div class="kpi-grid">
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="setTab('tabell')" id="tab-tabell">2026</button>
+    <button class="tab-btn" onclick="setTab('fravar')" id="tab-fravar">Ferie & fravær 2026</button>
+    <button class="tab-btn" onclick="setTab('ar2027')" id="tab-ar2027">2027</button>
+    <button class="tab-btn" onclick="setTab('fravar2027')" id="tab-fravar2027">Ferie & fravær 2027</button>
+
+    <button class="tab-btn" onclick="setTab('graf')" id="tab-graf">Graf</button>
+  </div>
+  <div id="year-selection-note" class="year-selection-note">Valgt år: 2026</div>
+
+  <div class="kpi-grid" id="kpi-grid-2026">
     <div class="kpi-card"><div class="kpi-lbl">Gammel modell</div><div class="kpi-val" id="kpi-gml">–</div><div style="font-size:11px;color:#666">2026 inkl. feriepenger</div></div>
     <div class="kpi-card"><div class="kpi-lbl" id="kpi-ny-lbl">Ny modell (46%)</div><div class="kpi-val blue" id="kpi-ny">–</div><div style="font-size:11px;color:#666">2026 overgangssum inkl. feriepenger</div></div>
     <div class="kpi-card"><div class="kpi-lbl">Differanse</div><div class="kpi-val" id="kpi-diff">–</div><div style="font-size:11px;color:#666" id="kpi-diff-lbl">–</div><div id="kpi-diff-forskudd" style="font-size:11px;margin-top:3px;display:none"></div><div id="kpi-diff-tillegg" style="font-size:11px;margin-top:3px;display:none"></div></div>
-  </div>
-
-  <div class="tab-bar">
-    <button class="tab-btn active" onclick="setTab('tabell')" id="tab-tabell">2026 månedlig</button>
-    <button class="tab-btn" onclick="setTab('fravar')" id="tab-fravar">Ferie & fravær (dager)</button>
-    <button class="tab-btn" onclick="setTab('ar2027')" id="tab-ar2027">2027 helår</button>
-    <button class="tab-btn" onclick="setTab('graf')" id="tab-graf">Graf</button>
   </div>
 
   <!-- 2026 tabell -->
@@ -166,20 +169,49 @@
         <th style="text-align:left;width:80px">Måned</th>
         <th>
           <span class="fravar-th-title">Feriedager</span>
-          <a href="#" class="fravar-reset-link" onclick="resetFravarKolonne('ferie');return false;">nullstill</a>
+          <a href="#" class="fravar-reset-link" onclick="resetFravarKolonne('ferie',2026);return false;">nullstill</a>
         </th>
         <th>
           <span class="fravar-th-title">Syk/sykt barn/permisjon</span>
-          <a href="#" class="fravar-reset-link" onclick="resetFravarKolonne('syk');return false;">nullstill</a>
+          <a href="#" class="fravar-reset-link" onclick="resetFravarKolonne('syk',2026);return false;">nullstill</a>
         </th>
         <th>
           <span class="fravar-th-title">Dager uten oppdrag</span>
-          <a href="#" class="fravar-reset-link" onclick="resetFravarKolonne('uten');return false;">nullstill</a>
+          <a href="#" class="fravar-reset-link" onclick="resetFravarKolonne('uten',2026);return false;">nullstill</a>
         </th>
         <th class="col-fakt">Fakturert (t)</th>
         <th>Omsetning</th>
       </tr></thead>
       <tbody id="fravar-body"></tbody>
+    </table>
+    </div>
+  </div>
+
+  <!-- Fravær 2027 -->
+  <div class="card" id="content-fravar2027" style="display:none">
+    <div style="font-size:12px;color:#888;margin-bottom:10px;padding-bottom:10px;border-bottom:0.5px solid #eee;">
+      Registrer antall <strong style="color:#1a1a18;font-weight:500">dager</strong> per måned for 2027.
+    </div>
+    <div class="table-wrap">
+    <table class="tbl">
+      <thead><tr>
+        <th style="text-align:left;width:80px">Måned</th>
+        <th>
+          <span class="fravar-th-title">Feriedager</span>
+          <a href="#" class="fravar-reset-link" onclick="resetFravarKolonne('ferie',2027);return false;">nullstill</a>
+        </th>
+        <th>
+          <span class="fravar-th-title">Syk/sykt barn/permisjon</span>
+          <a href="#" class="fravar-reset-link" onclick="resetFravarKolonne('syk',2027);return false;">nullstill</a>
+        </th>
+        <th>
+          <span class="fravar-th-title">Dager uten oppdrag</span>
+          <a href="#" class="fravar-reset-link" onclick="resetFravarKolonne('uten',2027);return false;">nullstill</a>
+        </th>
+        <th class="col-fakt">Fakturert (t)</th>
+        <th>Omsetning</th>
+      </tr></thead>
+      <tbody id="fravar-body-2027"></tbody>
     </table>
     </div>
   </div>

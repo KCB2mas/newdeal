@@ -18,6 +18,8 @@ h1{font-size:20px;font-weight:500;margin-bottom:4px}
 .tab-bar{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}
 .tab-btn{padding:9px 16px;border-radius:8px;border:0.5px solid #ddd;background:transparent;cursor:pointer;font-size:13px;color:#666;touch-action:manipulation}
 .tab-btn.active{background:#f0f0ec;color:#1a1a18;font-weight:500}
+.tab-btn.year-active:not(.active){border-color:#c8d8ea;background:#f4f8fd;color:#24507d}
+.year-selection-note{font-size:12px;font-weight:600;color:#24507d;margin:-4px 0 10px}
 .tbl{width:100%;border-collapse:collapse;font-size:12px}
 .tbl th{text-align:right;padding:8px 10px;font-weight:500;font-size:11px;color:#888;border-bottom:0.5px solid #eee;white-space:nowrap}
 .tbl th:first-child{text-align:left}
@@ -26,13 +28,17 @@ h1{font-size:20px;font-weight:500;margin-bottom:4px}
 .tbl tr.total-row td{font-weight:500;background:#f0f0ec}
 .tbl tr.special-row td{background:#eef4fc}
 .fravær-inp{width:56px;text-align:center;padding:6px;border-radius:6px;border:0.5px solid #ccc;background:#fff;font-size:15px;touch-action:manipulation}
-#content-fravar .tbl th{
+#content-fravar .tbl th,
+#content-fravar2027 .tbl th{
   white-space:normal;
   vertical-align:bottom;
 }
 #content-fravar .tbl thead th:nth-child(2),
 #content-fravar .tbl thead th:nth-child(3),
-#content-fravar .tbl thead th:nth-child(4){
+#content-fravar .tbl thead th:nth-child(4),
+#content-fravar2027 .tbl thead th:nth-child(2),
+#content-fravar2027 .tbl thead th:nth-child(3),
+#content-fravar2027 .tbl thead th:nth-child(4){
   text-align:center;
 }
 .fravar-th-title{
@@ -90,6 +96,7 @@ h1{font-size:20px;font-weight:500;margin-bottom:4px}
   .inp-ro{font-size:14px;padding:9px}
   .tab-bar{gap:4px}
   .tab-btn{flex:1;text-align:center;padding:10px 4px;font-size:12px}
+  .year-selection-note{font-size:11px;margin:-2px 0 8px}
   .col-arb,.col-fakt{display:none}
   .tbl th,.tbl td{padding:7px 6px;font-size:11px}
   .col-garanti{display:none}
@@ -101,6 +108,10 @@ h1{font-size:20px;font-weight:500;margin-bottom:4px}
   }
   #content-fravar .tbl th:nth-child(6),
   #content-fravar .tbl td:nth-child(6){
+    display:none;
+  }
+  #content-fravar2027 .tbl th:nth-child(6),
+  #content-fravar2027 .tbl td:nth-child(6){
     display:none;
   }
   .fravær-inp{width:52px;font-size:15px;padding:7px 4px}

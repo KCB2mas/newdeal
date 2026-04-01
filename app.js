@@ -1,25 +1,55 @@
 const ARS_DAGER = 260;
 const G_DEFAULT = 136000; // 1. mai 2026
 const STORAGE_KEY = 'newdeal-state-v1';
+const DEFAULT_FRAVAR_VERSION = 2;
 
 const MONTHS_K = ['Jan','Feb','Mar','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Des'];
-const ARB_DAGER = [21,20,22,19,18,22,23,21,22,22,21,20];
+const ARB_DAGER_2026 = [21,20,22,19,18,22,23,21,22,22,21,20];
+const ARB_DAGER_2027 = [20,20,20,22,19,22,22,22,22,21,22,21];
 const T_DAG = 7.5;
 
 let modell = 'fp';
 let activeTab = 'tabell';
 let chart = null;
 
-const fravær = Array.from({length:12},(_,i)=>({
+const fravær2026 = Array.from({length:12},(_,i)=>({
   ferie: i===6?20:i===11?5:0,
   syk: 0,
   uten: 0
 }));
 
-function clampFravarMonth(monthIndex){
+const fravær2027 = Array.from({length:12},(_,i)=>({
+  ferie: i===6?20:i===11?5:0,
+  syk: 0,
+  uten: 0
+}));
+
+function seedDefaultFravar(fravær){
+  for(let i=0;i<12;i++){
+    fravær[i].ferie = i===6?20:i===11?5:0;
+    fravær[i].syk = 0;
+    fravær[i].uten = 0;
+  }
+}
+
+function isFravarEmpty(fravær){
+  return fravær.every(f=>((+f.ferie||0)+(+f.syk||0)+(+f.uten||0))===0);
+}
+
+function getArbDager(year){
+  return year===2027 ? ARB_DAGER_2027 : ARB_DAGER_2026;
+}
+
+function getFravarData(year){
+  return year===2027 ? fravær2027 : fravær2026;
+}
+
+function clampFravarMonth(monthIndex, year=2026){
+  const fravær = getFravarData(year);
+  const arbDager = getArbDager(year);
   const f = fravær[monthIndex];
   if(!f) return;
-  const maxDays = ARB_DAGER[monthIndex] || 0;
+  const maxDays = arbDager[monthIndex] || 0;
 
   f.ferie = Math.max(0, +f.ferie || 0);
   f.syk = Math.max(0, +f.syk || 0);
@@ -38,11 +68,13 @@ function clampFravarMonth(monthIndex){
   });
 }
 
-function setFravarDag(monthIndex, key, rawValue){
+function setFravarDag(monthIndex, key, rawValue, year=2026){
+  const fravær = getFravarData(year);
+  const arbDager = getArbDager(year);
   const f = fravær[monthIndex];
   if(!f || !['ferie','syk','uten'].includes(key)) return;
 
-  const maxDays = ARB_DAGER[monthIndex] || 0;
+  const maxDays = arbDager[monthIndex] || 0;
   const value = Math.max(0, +rawValue || 0);
   const otherSum =
     (key === 'ferie' ? 0 : f.ferie) +
@@ -54,7 +86,8 @@ function setFravarDag(monthIndex, key, rawValue){
   updateUI();
 }
 
-function resetFravarKolonne(key){
+function resetFravarKolonne(key, year=2026){
+  const fravær = getFravarData(year);
   if(!['ferie','syk','uten'].includes(key)) return;
   for(let i=0;i<fravær.length;i++){
     fravær[i][key]=0;
@@ -76,10 +109,12 @@ function saveState(){
       values[id]=el.type==='checkbox'?el.checked:el.value;
     });
     localStorage.setItem(STORAGE_KEY, JSON.stringify({
+      defaultFravarVersion: DEFAULT_FRAVAR_VERSION,
       modell,
       activeTab,
       values,
-      fravær
+      fravær2026,
+      fravær2027
     }));
   }catch(_e){}
 }
@@ -97,17 +132,36 @@ function loadState(){
         else el.value=val;
       });
     }
-    if(Array.isArray(state?.fravær)){
-      state.fravær.slice(0,12).forEach((v,i)=>{
+    const saved2026 = Array.isArray(state?.fravær2026)
+      ? state.fravær2026
+      : Array.isArray(state?.fravær) ? state.fravær : null;
+    if(saved2026){
+      saved2026.slice(0,12).forEach((v,i)=>{
         if(!v) return;
-        fravær[i].ferie=+v.ferie||0;
-        fravær[i].syk=+v.syk||0;
-        fravær[i].uten=+v.uten||0;
-        clampFravarMonth(i);
+        fravær2026[i].ferie=+v.ferie||0;
+        fravær2026[i].syk=+v.syk||0;
+        fravær2026[i].uten=+v.uten||0;
+        clampFravarMonth(i, 2026);
       });
     }
+    if(Array.isArray(state?.fravær2027)){
+      state.fravær2027.slice(0,12).forEach((v,i)=>{
+        if(!v) return;
+        fravær2027[i].ferie=+v.ferie||0;
+        fravær2027[i].syk=+v.syk||0;
+        fravær2027[i].uten=+v.uten||0;
+        clampFravarMonth(i, 2027);
+      });
+    }
+
+    // One-time migration: if old stored fravær is completely empty, seed new defaults.
+    if((state?.defaultFravarVersion||0) < DEFAULT_FRAVAR_VERSION){
+      if(isFravarEmpty(fravær2026)) seedDefaultFravar(fravær2026);
+      if(isFravarEmpty(fravær2027)) seedDefaultFravar(fravær2027);
+    }
+
     if(state?.modell==='fp' || state?.modell==='fl') modell=state.modell;
-    if(['tabell','fravar','ar2027','graf'].includes(state?.activeTab)) activeTab=state.activeTab;
+    if(['tabell','fravar','fravar2027','ar2027','graf'].includes(state?.activeTab)) activeTab=state.activeTab;
   }catch(_e){}
 }
 
@@ -147,10 +201,25 @@ function setModell(m, keepValues=false){
 
 function setTab(t){
   activeTab=t;
-  ['tabell','fravar','ar2027','graf'].forEach(id=>{
+  ['tabell','fravar','fravar2027','ar2027','graf'].forEach(id=>{
     document.getElementById('content-'+id).style.display=t===id?'block':'none';
     document.getElementById('tab-'+id).classList.toggle('active',t===id);
   });
+
+  const is2027 = t==='ar2027' || t==='fravar2027';
+  const kpi2026 = document.getElementById('kpi-grid-2026');
+  if(kpi2026) kpi2026.style.display=is2027?'none':'grid';
+
+  const yearNote = document.getElementById('year-selection-note');
+  if(yearNote) yearNote.textContent=is2027?'Valgt år: 2027':'Valgt år: 2026';
+
+  ['tab-tabell','tab-fravar','tab-graf'].forEach(id=>{
+    document.getElementById(id)?.classList.toggle('year-active', !is2027);
+  });
+  ['tab-ar2027','tab-fravar2027'].forEach(id=>{
+    document.getElementById(id)?.classList.toggle('year-active', is2027);
+  });
+
   if(t==='graf') setTimeout(renderChart,50);
   saveState();
 }
@@ -191,11 +260,11 @@ function getParams(){
     sykKompDag,garantilonn,garantiForskudd,garantiTrekkDag,garantiGulvFaktor,spesialMnd};
 }
 
-function beregnAar(p, feriepengerOverride, is2027=false){
+function beregnAar(p, {feriepengerOverride, is2027=false, fravarData=fravær2026, arbDager=ARB_DAGER_2026} = {}){
   const fp = feriepengerOverride !== undefined ? feriepengerOverride : p.feriepenger;
   return Array.from({length:12},(_,i)=>{
-    const arb=ARB_DAGER[i];
-    const f=fravær[i];
+    const arb=arbDager[i];
+    const f=fravarData[i];
     const timer=arb*T_DAG*p.stilling;
     const faktTimer=Math.max(0,timer-(f.ferie+f.syk+f.uten)*T_DAG);
     const omsetning=faktTimer*p.timepris;
@@ -243,7 +312,10 @@ function beregnAar(p, feriepengerOverride, is2027=false){
 }
 
 function updateUI(){
-  for(let i=0;i<12;i++) clampFravarMonth(i);
+  for(let i=0;i<12;i++){
+    clampFravarMonth(i, 2026);
+    clampFravarMonth(i, 2027);
+  }
 
   const p=getParams();
   const stillingEl=document.getElementById('stilling-val');
@@ -267,7 +339,7 @@ function updateUI(){
   const juniNote=document.getElementById('juni-note-2026');
   if(juniNote) juniNote.textContent=` ${spesialNavn} ★ er spesialmåned i 2026: feriepenger utbetales 20. ${spesialUtbetalt} — kun dette året.`;
 
-  const rows26=beregnAar(p);
+  const rows26=beregnAar(p, {fravarData: fravær2026, arbDager: ARB_DAGER_2026});
   const gmlTotal26=rows26.reduce((s,r)=>s+r.gml,0);
   const omsetningTotal26=rows26.reduce((s,r)=>s+r.omsetning,0);
 
@@ -278,7 +350,12 @@ function updateUI(){
   const diffOvergang=overgangsSum-gmlTotal26;
 
   const fp27=(overgangsSum-p.feriepenger)*0.12;
-  const rows27=beregnAar(p,fp27,true);
+  const rows27=beregnAar(p, {
+    feriepengerOverride: fp27,
+    is2027: true,
+    fravarData: fravær2027,
+    arbDager: ARB_DAGER_2027
+  });
   const nyTotal27=rows27.reduce((s,r)=>s+r.ny,0);
   const gmlTotal27=rows27.reduce((s,r)=>s+r.gml,0);
   const diff27=nyTotal27-gmlTotal27;
@@ -392,26 +469,43 @@ function updateUI(){
 
   let fhtml='';
   rows26.forEach((r,i)=>{
-    const f=fravær[i];
+    const f=fravær2026[i];
     const maxFerie = Math.max(0, r.arb - f.syk - f.uten);
     const maxSyk = Math.max(0, r.arb - f.ferie - f.uten);
     const maxUten = Math.max(0, r.arb - f.ferie - f.syk);
     fhtml+=`<tr>
       <td>${MONTHS_K[i]}</td>
-      <td style="text-align:center"><input class="fravær-inp" type="number" inputmode="numeric" pattern="[0-9]*" min="0" max="${maxFerie}" value="${f.ferie}" onchange="setFravarDag(${i},'ferie',this.value)"></td>
-      <td style="text-align:center"><input class="fravær-inp" type="number" inputmode="numeric" pattern="[0-9]*" min="0" max="${maxSyk}" value="${f.syk}" onchange="setFravarDag(${i},'syk',this.value)"></td>
-      <td style="text-align:center"><input class="fravær-inp" type="number" inputmode="numeric" pattern="[0-9]*" min="0" max="${maxUten}" value="${f.uten}" onchange="setFravarDag(${i},'uten',this.value)"></td>
+      <td style="text-align:center"><input class="fravær-inp" type="number" inputmode="numeric" pattern="[0-9]*" min="0" max="${maxFerie}" value="${f.ferie}" onchange="setFravarDag(${i},'ferie',this.value,2026)"></td>
+      <td style="text-align:center"><input class="fravær-inp" type="number" inputmode="numeric" pattern="[0-9]*" min="0" max="${maxSyk}" value="${f.syk}" onchange="setFravarDag(${i},'syk',this.value,2026)"></td>
+      <td style="text-align:center"><input class="fravær-inp" type="number" inputmode="numeric" pattern="[0-9]*" min="0" max="${maxUten}" value="${f.uten}" onchange="setFravarDag(${i},'uten',this.value,2026)"></td>
       <td>${r.faktTimer.toFixed(1)}</td><td>${kr(r.omsetning)}</td>
     </tr>`;
   });
   document.getElementById('fravar-body').innerHTML=fhtml;
+
+  let fhtml27='';
+  rows27.forEach((r,i)=>{
+    const f=fravær2027[i];
+    const maxFerie = Math.max(0, r.arb - f.syk - f.uten);
+    const maxSyk = Math.max(0, r.arb - f.ferie - f.uten);
+    const maxUten = Math.max(0, r.arb - f.ferie - f.syk);
+    fhtml27+=`<tr>
+      <td>${MONTHS_K[i]}</td>
+      <td style="text-align:center"><input class="fravær-inp" type="number" inputmode="numeric" pattern="[0-9]*" min="0" max="${maxFerie}" value="${f.ferie}" onchange="setFravarDag(${i},'ferie',this.value,2027)"></td>
+      <td style="text-align:center"><input class="fravær-inp" type="number" inputmode="numeric" pattern="[0-9]*" min="0" max="${maxSyk}" value="${f.syk}" onchange="setFravarDag(${i},'syk',this.value,2027)"></td>
+      <td style="text-align:center"><input class="fravær-inp" type="number" inputmode="numeric" pattern="[0-9]*" min="0" max="${maxUten}" value="${f.uten}" onchange="setFravarDag(${i},'uten',this.value,2027)"></td>
+      <td>${r.faktTimer.toFixed(1)}</td><td>${kr(r.omsetning)}</td>
+    </tr>`;
+  });
+  const fravarBody2027=document.getElementById('fravar-body-2027');
+  if(fravarBody2027) fravarBody2027.innerHTML=fhtml27;
 
   if(activeTab==='graf') renderChart(rows26);
   saveState();
 }
 
 function renderChart(rows){
-  if(!rows) rows=beregnAar(getParams());
+  if(!rows) rows=beregnAar(getParams(), {fravarData: fravær2026, arbDager: ARB_DAGER_2026});
   if(chart) chart.destroy();
   chart=new Chart(document.getElementById('lonn-chart'),{
     type:'bar',
