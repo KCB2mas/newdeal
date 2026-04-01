@@ -17,8 +17,7 @@ h1{font-size:20px;font-weight:500;margin-bottom:4px}
 .kpi-val{font-size:20px;font-weight:500}
 .tab-bar{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}
 .tab-btn{padding:9px 16px;border-radius:8px;border:0.5px solid #ddd;background:transparent;cursor:pointer;font-size:13px;color:#666;touch-action:manipulation}
-.tab-btn.active{background:#f0f0ec;color:#1a1a18;font-weight:500}
-.tab-btn.year-active:not(.active){border-color:#c8d8ea;background:#f4f8fd;color:#24507d}
+.tab-btn.active{background:#dfe7ee;border-color:#b9c9d8;color:#1f4568;font-weight:600}
 .year-selection-note{font-size:12px;font-weight:600;color:#24507d;margin:-4px 0 10px}
 .tbl{width:100%;border-collapse:collapse;font-size:12px}
 .tbl th{text-align:right;padding:8px 10px;font-weight:500;font-size:11px;color:#888;border-bottom:0.5px solid #eee;white-space:nowrap}
