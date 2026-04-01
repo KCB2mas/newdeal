@@ -26,6 +26,34 @@ h1{font-size:20px;font-weight:500;margin-bottom:4px}
 .tbl tr.total-row td{font-weight:500;background:#f0f0ec}
 .tbl tr.special-row td{background:#eef4fc}
 .fravær-inp{width:56px;text-align:center;padding:6px;border-radius:6px;border:0.5px solid #ccc;background:#fff;font-size:15px;touch-action:manipulation}
+#content-fravar .tbl th{
+  white-space:normal;
+  vertical-align:bottom;
+}
+#content-fravar .tbl thead th:nth-child(2),
+#content-fravar .tbl thead th:nth-child(3),
+#content-fravar .tbl thead th:nth-child(4){
+  text-align:center;
+}
+.fravar-th-title{
+  display:block;
+  line-height:1.2;
+  max-width:120px;
+  margin:0 auto;
+  text-align:center;
+}
+.fravar-reset-link{
+  display:block;
+  margin-top:4px;
+  margin-left:auto;
+  margin-right:auto;
+  font-size:10px;
+  font-weight:400;
+  color:#666;
+  text-decoration:underline;
+  text-align:center;
+}
+.fravar-reset-link:hover{color:#1a1a18}
 .green{color:#1a7a3d}.red{color:#b91c1c}.blue{color:#185fa5}
 .breakeven-box{margin-top:12px;padding:10px;border-radius:8px;background:#f0f0ec;border:0.5px solid #ddd}
 .info-box{padding:10px 12px;border-radius:8px;background:#eef4fc;border:0.5px solid #c5d9ef;font-size:12px;color:#185fa5;margin-bottom:12px}

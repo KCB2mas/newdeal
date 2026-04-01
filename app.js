@@ -16,6 +16,52 @@ const fravær = Array.from({length:12},(_,i)=>({
   uten: 0
 }));
 
+function clampFravarMonth(monthIndex){
+  const f = fravær[monthIndex];
+  if(!f) return;
+  const maxDays = ARB_DAGER[monthIndex] || 0;
+
+  f.ferie = Math.max(0, +f.ferie || 0);
+  f.syk = Math.max(0, +f.syk || 0);
+  f.uten = Math.max(0, +f.uten || 0);
+
+  const sum = f.ferie + f.syk + f.uten;
+  if(sum <= maxDays) return;
+
+  let overflow = sum - maxDays;
+  const keys = ['uten','syk','ferie'];
+  keys.forEach((key)=>{
+    if(overflow <= 0) return;
+    const trekk = Math.min(f[key], overflow);
+    f[key] -= trekk;
+    overflow -= trekk;
+  });
+}
+
+function setFravarDag(monthIndex, key, rawValue){
+  const f = fravær[monthIndex];
+  if(!f || !['ferie','syk','uten'].includes(key)) return;
+
+  const maxDays = ARB_DAGER[monthIndex] || 0;
+  const value = Math.max(0, +rawValue || 0);
+  const otherSum =
+    (key === 'ferie' ? 0 : f.ferie) +
+    (key === 'syk' ? 0 : f.syk) +
+    (key === 'uten' ? 0 : f.uten);
+  const maxForField = Math.max(0, maxDays - otherSum);
+
+  f[key] = Math.min(value, maxForField);
+  updateUI();
+}
+
+function resetFravarKolonne(key){
+  if(!['ferie','syk','uten'].includes(key)) return;
+  for(let i=0;i<fravær.length;i++){
+    fravær[i][key]=0;
+  }
+  updateUI();
+}
+
 function saveState(){
   try{
     const ids = [
@@ -57,6 +103,7 @@ function loadState(){
         fravær[i].ferie=+v.ferie||0;
         fravær[i].syk=+v.syk||0;
         fravær[i].uten=+v.uten||0;
+        clampFravarMonth(i);
       });
     }
     if(state?.modell==='fp' || state?.modell==='fl') modell=state.modell;
@@ -195,6 +242,8 @@ function beregnAar(p, feriepengerOverride, is2027=false){
 }
 
 function updateUI(){
+  for(let i=0;i<12;i++) clampFravarMonth(i);
+
   const p=getParams();
   const stillingEl=document.getElementById('stilling-val');
   if(stillingEl) stillingEl.textContent=Math.round((+document.getElementById('stillingsprosent').value||1)*100)+'%';
@@ -330,11 +379,14 @@ function updateUI(){
   let fhtml='';
   rows26.forEach((r,i)=>{
     const f=fravær[i];
+    const maxFerie = Math.max(0, r.arb - f.syk - f.uten);
+    const maxSyk = Math.max(0, r.arb - f.ferie - f.uten);
+    const maxUten = Math.max(0, r.arb - f.ferie - f.syk);
     fhtml+=`<tr>
       <td>${MONTHS_K[i]}</td>
-      <td style="text-align:center"><input class="fravær-inp" type="number" inputmode="numeric" pattern="[0-9]*" min="0" max="30" value="${f.ferie}" onchange="fravær[${i}].ferie=+this.value;updateUI()"></td>
-      <td style="text-align:center"><input class="fravær-inp" type="number" inputmode="numeric" pattern="[0-9]*" min="0" max="30" value="${f.syk}" onchange="fravær[${i}].syk=+this.value;updateUI()"></td>
-      <td style="text-align:center"><input class="fravær-inp" type="number" inputmode="numeric" pattern="[0-9]*" min="0" max="30" value="${f.uten}" onchange="fravær[${i}].uten=+this.value;updateUI()"></td>
+      <td style="text-align:center"><input class="fravær-inp" type="number" inputmode="numeric" pattern="[0-9]*" min="0" max="${maxFerie}" value="${f.ferie}" onchange="setFravarDag(${i},'ferie',this.value)"></td>
+      <td style="text-align:center"><input class="fravær-inp" type="number" inputmode="numeric" pattern="[0-9]*" min="0" max="${maxSyk}" value="${f.syk}" onchange="setFravarDag(${i},'syk',this.value)"></td>
+      <td style="text-align:center"><input class="fravær-inp" type="number" inputmode="numeric" pattern="[0-9]*" min="0" max="${maxUten}" value="${f.uten}" onchange="setFravarDag(${i},'uten',this.value)"></td>
       <td>${r.faktTimer.toFixed(1)}</td><td>${kr(r.omsetning)}</td>
     </tr>`;
   });

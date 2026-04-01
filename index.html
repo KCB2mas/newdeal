@@ -164,9 +164,18 @@
     <table class="tbl">
       <thead><tr>
         <th style="text-align:left;width:80px">Måned</th>
-        <th>Feriedager</th>
-        <th>Syk/sykt barn/permisjon</th>
-        <th>Dager uten oppdrag</th>
+        <th>
+          <span class="fravar-th-title">Feriedager</span>
+          <a href="#" class="fravar-reset-link" onclick="resetFravarKolonne('ferie');return false;">nullstill</a>
+        </th>
+        <th>
+          <span class="fravar-th-title">Syk/sykt barn/permisjon</span>
+          <a href="#" class="fravar-reset-link" onclick="resetFravarKolonne('syk');return false;">nullstill</a>
+        </th>
+        <th>
+          <span class="fravar-th-title">Dager uten oppdrag</span>
+          <a href="#" class="fravar-reset-link" onclick="resetFravarKolonne('uten');return false;">nullstill</a>
+        </th>
         <th class="col-fakt">Fakturert (t)</th>
         <th>Omsetning</th>
       </tr></thead>
