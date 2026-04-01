@@ -182,12 +182,13 @@ function getParams(){
   const ferieJusteringNy=(feriedagerIgjen-25)*ferietrekkDag;
   const garantiGulvFaktor=tilvalgP4?0:tilvalgP2?0.5:1;
   const garantilonn=seksG/12*stilling*garantiGulvFaktor;
+  const garantiForskudd=seksG/12*stilling;
   const garantiTrekkDag=seksG/ARS_DAGER*stilling*garantiGulvFaktor;
   const sykKompDag=garantiTrekkDag;
   const spesialMnd=4;
   return{timepris,fastlonn,tillegg,stilling,provSats,feriepenger,nyPct:effektivSats,
     fastlonnActual,innslagspunkt,ferietrekkDag,ferietrekkGml,ferieJusteringNy,
-    sykKompDag,garantilonn,garantiTrekkDag,garantiGulvFaktor,spesialMnd};
+    sykKompDag,garantilonn,garantiForskudd,garantiTrekkDag,garantiGulvFaktor,spesialMnd};
 }
 
 function beregnAar(p, feriepengerOverride, is2027=false){
@@ -205,7 +206,7 @@ function beregnAar(p, feriepengerOverride, is2027=false){
     if(modell==='fp'){
       if(i===p.spesialMnd){
         gml=p.fastlonn+tilleggMnd+prov+p.feriepenger-25*p.ferietrekkDag;
-        maiOvergang=prov+p.feriepenger-p.ferietrekkGml+p.garantilonn;
+        maiOvergang=prov+p.feriepenger-p.ferietrekkGml+p.garantiForskudd;
       } else {
         gml=p.fastlonn+tilleggMnd+prov;
         maiOvergang=null;
@@ -213,7 +214,7 @@ function beregnAar(p, feriepengerOverride, is2027=false){
     } else {
       if(i===p.spesialMnd){
         gml=p.fastlonn+tilleggMnd+p.feriepenger-25*p.ferietrekkDag;
-        maiOvergang=p.feriepenger-p.ferietrekkGml+p.garantilonn;
+        maiOvergang=p.feriepenger-p.ferietrekkGml+p.garantiForskudd;
       } else {
         gml=p.fastlonn+tilleggMnd;
         maiOvergang=null;
@@ -309,6 +310,19 @@ function updateUI(){
   document.getElementById('kpi-diff').textContent=(diffOvergang>=0?'+ ':'')+kr(Math.abs(diffOvergang));
   document.getElementById('kpi-diff').className='kpi-val '+(diffOvergang>=0?'green':'red');
   document.getElementById('kpi-diff-lbl').textContent=diffOvergang>=0?'Ny modell er bedre ↑':'Gammel modell er bedre ↓';
+
+  const diffForskuddEl=document.getElementById('kpi-diff-forskudd');
+  if(diffForskuddEl){
+    if(p.garantiForskudd>0){
+      const diffUtenForskudd=diffOvergang-p.garantiForskudd;
+      const retning=diffUtenForskudd>=0?'Ny modell er bedre':'Gammel modell er bedre';
+      diffForskuddEl.textContent=`(uten 1 mnd garantilønn på forskudd: ${diffUtenForskudd>=0?'+ ':'− '}${kr(Math.abs(diffUtenForskudd))} — ${retning})`;
+      diffForskuddEl.style.color=diffUtenForskudd>=0?'#1a7a3d':'#b91c1c';
+      diffForskuddEl.style.display='block';
+    } else {
+      diffForskuddEl.style.display='none';
+    }
+  }
 
   const diffInklTillegg=overgangsSum-(gmlTotal26+8*p.tillegg);
   const diffTilleggEl=document.getElementById('kpi-diff-tillegg');
