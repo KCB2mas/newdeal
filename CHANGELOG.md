@@ -1,6 +1,8 @@
 # Changelog
 
-## [Unreleased]
+Denne changeloggen bruker datoformat: `YYYY-MM-DD`.
+
+## 2026-04-01
 
 ### Endret
 - Forbedret input på fanen `Ferie & fravær` for mobil:
@@ -45,3 +47,13 @@
 - `index.html`
 - `style.css`
 - `CHANGELOG.md`
+
+## 2026-03-31
+
+### Endret
+- La til disclaimer og oppdaterte antagelser i lønnsmodellen.
+- Tydeliggjorde tekst i fanen for ferie og fravær (at input er dager).
+- Justerte mobilvisning for å skjule garantilønn-kolonne.
+- La til lagring i `localStorage` slik at input beholdes ved refresh.
+- La til forklaring for tilvalg `8,5G`.
+- Oppdaterte `README.md`.
