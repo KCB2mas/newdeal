@@ -332,9 +332,9 @@ function updateUI(){
     const f=fravær[i];
     fhtml+=`<tr>
       <td>${MONTHS_K[i]}</td>
-      <td style="text-align:center"><input class="fravær-inp" type="number" min="0" max="30" value="${f.ferie}" oninput="fravær[${i}].ferie=+this.value;updateUI()"></td>
-      <td style="text-align:center"><input class="fravær-inp" type="number" min="0" max="30" value="${f.syk}" oninput="fravær[${i}].syk=+this.value;updateUI()"></td>
-      <td style="text-align:center"><input class="fravær-inp" type="number" min="0" max="30" value="${f.uten}" oninput="fravær[${i}].uten=+this.value;updateUI()"></td>
+      <td style="text-align:center"><input class="fravær-inp" type="number" inputmode="numeric" pattern="[0-9]*" min="0" max="30" value="${f.ferie}" onchange="fravær[${i}].ferie=+this.value;updateUI()"></td>
+      <td style="text-align:center"><input class="fravær-inp" type="number" inputmode="numeric" pattern="[0-9]*" min="0" max="30" value="${f.syk}" onchange="fravær[${i}].syk=+this.value;updateUI()"></td>
+      <td style="text-align:center"><input class="fravær-inp" type="number" inputmode="numeric" pattern="[0-9]*" min="0" max="30" value="${f.uten}" onchange="fravær[${i}].uten=+this.value;updateUI()"></td>
       <td>${r.faktTimer.toFixed(1)}</td><td>${kr(r.omsetning)}</td>
     </tr>`;
   });

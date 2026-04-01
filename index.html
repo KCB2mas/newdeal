@@ -27,9 +27,9 @@
   <div class="card">
     <div class="section-hdr">Parametere</div>
     <div style="display:flex;flex-direction:column;gap:10px">
-      <div><span class="lbl">Timepris (kr)</span><input class="inp" type="number" id="timepris" value="1450" onchange="updateUI()"></div>
-      <div><span class="lbl">Fastlønn/mnd (kr)</span><input class="inp" type="number" id="fastlonn" value="65000" onchange="updateUI()"></div>
-      <div><span class="lbl">Tillegg/mnd (kr) <span style="font-weight:400;color:#aaa">jan–apr 2026</span></span><input class="inp" type="number" id="tillegg" value="0" onchange="updateUI()"></div>
+      <div><span class="lbl">Timepris (kr)</span><input class="inp" type="number" inputmode="numeric" pattern="[0-9]*" id="timepris" value="1450" onchange="updateUI()"></div>
+      <div><span class="lbl">Fastlønn/mnd (kr)</span><input class="inp" type="number" inputmode="numeric" pattern="[0-9]*" id="fastlonn" value="65000" onchange="updateUI()"></div>
+      <div><span class="lbl">Tillegg/mnd (kr) <span style="font-weight:400;color:#aaa">jan–apr 2026</span></span><input class="inp" type="number" inputmode="numeric" pattern="[0-9]*" id="tillegg" value="0" onchange="updateUI()"></div>
       <div id="fp-params" style="display:flex;flex-direction:column;gap:10px">
         <div>
           <span class="lbl">Stillingsprosent: <strong id="stilling-val">100%</strong></span>
@@ -45,9 +45,9 @@
         </div>
       </div>
       <div style="border-top:0.5px solid #eee;padding-top:10px;display:flex;flex-direction:column;gap:10px">
-        <div><span class="lbl">Feriedager igjen 1. juni</span><input class="inp" type="number" id="feriedager-igjen" value="25" onchange="updateUI()"></div>
-        <div><span class="lbl">Feriepenger fra 2025 (kr)</span><input class="inp" type="number" id="feriepenger" value="100000" onchange="updateUI()"></div>
-        <div><span class="lbl">Estimert G pr 1.5.26 (kr)</span><input class="inp" type="number" id="g-belop" value="136000" onchange="updateUI()"></div>
+        <div><span class="lbl">Feriedager igjen 1. juni</span><input class="inp" type="number" inputmode="numeric" pattern="[0-9]*" id="feriedager-igjen" value="25" onchange="updateUI()"></div>
+        <div><span class="lbl">Feriepenger fra 2025 (kr)</span><input class="inp" type="number" inputmode="numeric" pattern="[0-9]*" id="feriepenger" value="100000" onchange="updateUI()"></div>
+        <div><span class="lbl">Estimert G pr 1.5.26 (kr)</span><input class="inp" type="number" inputmode="numeric" pattern="[0-9]*" id="g-belop" value="136000" onchange="updateUI()"></div>
         <div>
           <span class="lbl">Månedlig garanti ny modell (kr)</span>
           <div class="inp-ro" id="mnd-garanti-vis">–</div>
