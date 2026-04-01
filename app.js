@@ -265,6 +265,7 @@ function beregnAar(p, {feriepengerOverride, is2027=false, fravarData=fravær2026
   return Array.from({length:12},(_,i)=>{
     const arb=arbDager[i];
     const f=fravarData[i];
+    const hasSpesial = !is2027 && i===p.spesialMnd;
     const timer=arb*T_DAG*p.stilling;
     const faktTimer=Math.max(0,timer-(f.ferie+f.syk+f.uten)*T_DAG);
     const omsetning=faktTimer*p.timepris;
@@ -273,19 +274,19 @@ function beregnAar(p, {feriepengerOverride, is2027=false, fravarData=fravær2026
 
     let gml, maiOvergang;
     if(modell==='fp'){
-      if(i===p.spesialMnd){
+      if(hasSpesial){
         gml=p.fastlonn+tilleggMnd+prov+p.feriepenger-25*p.ferietrekkDag;
         maiOvergang=prov+p.feriepenger-p.ferietrekkGml+p.garantiForskudd;
       } else {
-        gml=p.fastlonn+tilleggMnd+prov;
+        gml=p.fastlonn+tilleggMnd+prov+(is2027&&i===p.spesialMnd?fp:0);
         maiOvergang=null;
       }
     } else {
-      if(i===p.spesialMnd){
+      if(hasSpesial){
         gml=p.fastlonn+tilleggMnd+p.feriepenger-25*p.ferietrekkDag;
         maiOvergang=p.feriepenger-p.ferietrekkGml+p.garantiForskudd;
       } else {
-        gml=p.fastlonn+tilleggMnd;
+        gml=p.fastlonn+tilleggMnd+(is2027&&i===p.spesialMnd?fp:0);
         maiOvergang=null;
       }
     }
@@ -301,13 +302,13 @@ function beregnAar(p, {feriepengerOverride, is2027=false, fravarData=fravær2026
     if(f.syk>0 && f.uten>0){
       nyMedGulv=Math.min(nyMedGulv,p.garantilonn);
     }
-    const ferieJustering=(!is2027&&i===p.spesialMnd)?p.ferieJusteringNy:0;
-    const ny=(i===p.spesialMnd&&!is2027)
+    const ferieJustering=hasSpesial?p.ferieJusteringNy:0;
+    const ny=hasSpesial
       ?(maiOvergang+ferieJustering)
-      :(i===p.spesialMnd?nyMedGulv+fp+ferieJustering:nyMedGulv);
-    const fase=i<p.spesialMnd?'gml':i===p.spesialMnd?'overgang':'ny';
+      :((is2027&&i===p.spesialMnd)?nyMedGulv+fp:nyMedGulv);
+    const fase=is2027?'ny':i<p.spesialMnd?'gml':i===p.spesialMnd?'overgang':'ny';
 
-    return{arb,faktTimer,omsetning,gml,ny,diff:ny-gml,erSpesial:i===p.spesialMnd,garantiAndel,fase};
+    return{arb,faktTimer,omsetning,gml,ny,diff:ny-gml,erSpesial:hasSpesial,garantiAndel,fase};
   });
 }
 
