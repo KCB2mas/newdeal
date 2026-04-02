@@ -349,7 +349,16 @@ function updateUI(){
   const overgangsSum=sumJanAprGml26+sumMaiOvergang26+sumJunDesNy26;
   const diffOvergang=overgangsSum-gmlTotal26;
 
-  const fp27=(overgangsSum-p.feriepenger)*0.12;
+  // "Feriedager igjen 1. juni" gjelder kun 2026-visningen og skal ikke påvirke 2027.
+  // Bruk derfor et nøytralt 2026-grunnlag uten denne justeringen ved beregning av 2027-feriepenger.
+  const p2027Basis={...p, ferietrekkGml: 0, ferieJusteringNy: 0};
+  const rows26For2027Basis=beregnAar(p2027Basis, {fravarData: fravær2026, arbDager: ARB_DAGER_2026});
+  const sumJanAprGml26Basis=rows26For2027Basis.filter(r=>r.fase==='gml').reduce((s,r)=>s+r.gml,0);
+  const sumMaiOvergang26Basis=rows26For2027Basis.find(r=>r.fase==='overgang')?.ny||0;
+  const sumJunDesNy26Basis=rows26For2027Basis.filter(r=>r.fase==='ny').reduce((s,r)=>s+r.ny,0);
+  const overgangsSum2027Basis=sumJanAprGml26Basis+sumMaiOvergang26Basis+sumJunDesNy26Basis;
+
+  const fp27=(overgangsSum2027Basis-p.feriepenger)*0.12;
   const rows27=beregnAar(p, {
     feriepengerOverride: fp27,
     is2027: true,
