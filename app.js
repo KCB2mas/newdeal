@@ -190,8 +190,8 @@ function setModell(m, keepValues=false){
   document.getElementById('btn-fl').classList.toggle('active',m==='fl');
   document.getElementById('fp-params').style.display=m==='fp'?'flex':'none';
   document.getElementById('modell-note').textContent=m==='fp'
-    ?'Mai ★: feriepenger + garantilønn + provisjon utbetales 20. juni'
-    :'Mai ★: feriepenger + garantilønn utbetales 20. juni';
+    ?'Mai ★: juni 2026 er spesiell pga. 1 mnd garantilønn på forskudd (+ provisjon og feriepenger).'
+    :'Mai ★: juni 2026 er spesiell pga. 1 mnd garantilønn på forskudd (+ feriepenger).';
   if(!keepValues){
     if(m==='fl'){document.getElementById('fastlonn').value=90000;document.getElementById('feriepenger').value=114000;}
     else{document.getElementById('fastlonn').value=65000;document.getElementById('feriepenger').value=115000;}
@@ -270,7 +270,8 @@ function beregnAar(p, {feriepengerOverride, is2027=false, fravarData=fravær2026
     const faktTimer=Math.max(0,timer-(f.ferie+f.syk+f.uten)*T_DAG);
     const omsetning=faktTimer*p.timepris;
     const prov=modell==='fp'?Math.max(0,omsetning-p.innslagspunkt)*p.provSats*0.7825:0;
-    const tilleggMnd=(is2027||i>=5)?0:p.tillegg;
+    // Tillegg bortfaller fra og med mai 2026 (opptjent mai = utbetalt juni).
+    const tilleggMnd=(is2027||i>=4)?0:p.tillegg;
 
     let gml, maiOvergang;
     if(modell==='fp'){
@@ -278,7 +279,7 @@ function beregnAar(p, {feriepengerOverride, is2027=false, fravarData=fravær2026
         gml=p.fastlonn+tilleggMnd+prov+p.feriepenger-25*p.ferietrekkDag;
         maiOvergang=prov+p.feriepenger-p.ferietrekkGml+p.garantiForskudd;
       } else {
-        gml=p.fastlonn+tilleggMnd+prov+(is2027&&i===p.spesialMnd?fp:0);
+        gml=p.fastlonn+tilleggMnd+prov+(is2027&&i===p.spesialMnd?fp-25*p.ferietrekkDag:0);
         maiOvergang=null;
       }
     } else {
@@ -286,7 +287,7 @@ function beregnAar(p, {feriepengerOverride, is2027=false, fravarData=fravær2026
         gml=p.fastlonn+tilleggMnd+p.feriepenger-25*p.ferietrekkDag;
         maiOvergang=p.feriepenger-p.ferietrekkGml+p.garantiForskudd;
       } else {
-        gml=p.fastlonn+tilleggMnd+(is2027&&i===p.spesialMnd?fp:0);
+        gml=p.fastlonn+tilleggMnd+(is2027&&i===p.spesialMnd?fp-25*p.ferietrekkDag:0);
         maiOvergang=null;
       }
     }
@@ -335,10 +336,8 @@ function updateUI(){
     disclaimer85gEl.textContent=kr(gBelop*8.5);
   }
 
-  const spesialNavn=modell==='fp'?'Mai':'Juni';
-  const spesialUtbetalt=modell==='fp'?'juni':'juli';
   const juniNote=document.getElementById('juni-note-2026');
-  if(juniNote) juniNote.textContent=` ${spesialNavn} ★ er spesialmåned i 2026: feriepenger utbetales 20. ${spesialUtbetalt} — kun dette året.`;
+  if(juniNote) juniNote.textContent=' Mai ★ er spesialmåned i 2026: utbetaling 20. juni er spesiell pga. 1 mnd garantilønn på forskudd (ikke en spesialmåned i 2027).';
 
   const rows26=beregnAar(p, {fravarData: fravær2026, arbDager: ARB_DAGER_2026});
   const gmlTotal26=rows26.reduce((s,r)=>s+r.gml,0);

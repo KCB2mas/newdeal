@@ -2,6 +2,22 @@
 
 Denne changeloggen bruker datoformat: `YYYY-MM-DD`.
 
+## 2026-04-02
+
+### Endret
+- Korrigerte utbetaling i gammel modell for juni (opptjening i mai), inkludert fastlønn:
+  - Formelen håndterer nå juni-lønn som `månedslønn + feriepenger - 25 * ferietrekkDag`.
+- Presiserte overgangsregelen for tillegg:
+  - `tillegg` bortfaller fra og med mai 2026 (utbetales i juni), ikke fra juni-opptjening.
+- Fjernet spesialmåned-markering i 2027-tabellen:
+  - Ingen `★` i 2027 (spesialmåned gjelder kun 2026).
+- Oppdatert hjelpetekst i UI:
+  - Juni 2026 beskrives som spesiell pga. `1 mnd garantilønn på forskudd`, og teksten presiserer at dette ikke er en spesialmåned i 2027.
+
+### Oppdaterte filer
+- `app.js`
+- `CHANGELOG.md`
+
 ## 2026-04-01
 
 ### Endret
