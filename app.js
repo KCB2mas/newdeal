@@ -365,6 +365,11 @@ function updateUI(){
   const omsetningTotal27=rows27.reduce((s,r)=>s+r.omsetning,0);
 
   document.getElementById('kpi-gml').textContent=kr(gmlTotal26);
+  const gmlEksFpEl=document.getElementById('kpi-gml-eks-fp');
+  if(gmlEksFpEl){
+    const gmlEksFp=gmlTotal26-p.feriepenger;
+    gmlEksFpEl.textContent=`Ekskl. feriepenger: ${kr(gmlEksFp)}`;
+  }
   const tilleggEl=document.getElementById('gml-med-tillegg');
   if(tilleggEl&&p.tillegg>0) tilleggEl.textContent=kr(8*p.tillegg);
   else if(tilleggEl) tilleggEl.textContent='–';
@@ -382,6 +387,11 @@ function updateUI(){
     `Feriepenger 2027: ${kr(fp27)} (12% av faktisk overgangsårslønn ekskl. feriepenger)`;
 
   document.getElementById('kpi-ny').textContent=kr(overgangsSum);
+  const nyEksFpEl=document.getElementById('kpi-ny-eks-fp');
+  if(nyEksFpEl){
+    const nyEksFp=overgangsSum-p.feriepenger;
+    nyEksFpEl.textContent=`Ekskl. feriepenger: ${kr(nyEksFp)}`;
+  }
   document.getElementById('kpi-ny-lbl').textContent=`Ny modell (${pctLbl})`;
   document.getElementById('th-ny').textContent=`Ny modell (${pctLbl})`;
   document.getElementById('kpi-diff').textContent=(diffOvergang>=0?'+ ':'')+kr(Math.abs(diffOvergang));

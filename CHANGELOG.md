@@ -13,9 +13,12 @@ Denne changeloggen bruker datoformat: `YYYY-MM-DD`.
   - Ingen `★` i 2027 (spesialmåned gjelder kun 2026).
 - Oppdatert hjelpetekst i UI:
   - Juni 2026 beskrives som spesiell pga. `1 mnd garantilønn på forskudd`, og teksten presiserer at dette ikke er en spesialmåned i 2027.
+- KPI-kortene for 2026 viser nå også totalsummer `ekskl. feriepenger`:
+  - La til en ekstra linje under både `Gammel modell` og `Ny modell`, slik at bruker enkelt kan sammenligne med/uten feriepenger.
 
 ### Oppdaterte filer
 - `app.js`
+- `index.html`
 - `CHANGELOG.md`
 
 ## 2026-04-01
