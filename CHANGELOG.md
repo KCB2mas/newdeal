@@ -2,6 +2,25 @@
 
 Denne changeloggen bruker datoformat: `YYYY-MM-DD`.
 
+## 2026-04-03
+
+### Endret
+- La til påsketema med av/på-knapp i UI:
+  - Eget fargetema med påskefarger for bakgrunn, kort, faner og infofelter.
+  - Valg lagres i `localStorage` og gjenopprettes ved innlasting.
+- Satt påsketema til standard `på` for nye brukere/sessioner uten lagret state.
+- La til dekorlinje med påskeikoner og subtil animasjon.
+- Dekorlinjen er nå robust på tvers av skjermstørrelser:
+  - Bryter aldri til to linjer.
+  - Klippes ved behov i stedet for å påvirke layout.
+  - Fylles dynamisk basert på tilgjengelig bredde og oppdateres ved vindusstørrelse-endring.
+
+### Oppdaterte filer
+- `app.js`
+- `index.html`
+- `style.css`
+- `CHANGELOG.md`
+
 ## 2026-04-02
 
 ### Endret

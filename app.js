@@ -2,6 +2,7 @@ const ARS_DAGER = 260;
 const G_DEFAULT = 136000; // 1. mai 2026
 const STORAGE_KEY = 'newdeal-state-v1';
 const DEFAULT_FRAVAR_VERSION = 2;
+const EASTER_DECOR_SEQUENCE = ['🐰','🥚','🐥','🌷','🥚','🐥','🌼','🥚'];
 
 const MONTHS_K = ['Jan','Feb','Mar','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Des'];
 const ARB_DAGER_2026 = [21,20,22,19,18,22,23,21,22,22,21,20];
@@ -112,6 +113,7 @@ function saveState(){
       defaultFravarVersion: DEFAULT_FRAVAR_VERSION,
       modell,
       activeTab,
+      easterTheme: document.body.classList.contains('easter-theme'),
       values,
       fravær2026,
       fravær2027
@@ -159,6 +161,10 @@ function loadState(){
       if(isFravarEmpty(fravær2026)) seedDefaultFravar(fravær2026);
       if(isFravarEmpty(fravær2027)) seedDefaultFravar(fravær2027);
     }
+
+    if(state?.easterTheme===true) toggleEasterTheme(true);
+    else if(state?.easterTheme===false) toggleEasterTheme(false);
+    else toggleEasterTheme(true);
 
     if(state?.modell==='fp' || state?.modell==='fl') modell=state.modell;
     if(['tabell','fravar','fravar2027','ar2027','graf'].includes(state?.activeTab)) activeTab=state.activeTab;
@@ -543,6 +549,37 @@ function renderChart(rows){
   });
 }
 
+function toggleEasterTheme(force){
+  const on = typeof force==='boolean'
+    ? force
+    : !document.body.classList.contains('easter-theme');
+  document.body.classList.toggle('easter-theme', on);
+
+  const btn=document.getElementById('easter-theme-toggle');
+  if(btn){
+    btn.classList.toggle('active', on);
+    btn.setAttribute('aria-pressed', on?'true':'false');
+    btn.textContent=on?'Påsketema: På':'Påsketema: Av';
+  }
+  const note=document.getElementById('easter-theme-note');
+  if(note) note.textContent=on?'Påskefarger aktivert':'Aktiver påskefarger';
+  if(on) renderEasterDecor();
+  saveState();
+}
+
+function renderEasterDecor(){
+  const decor=document.getElementById('easter-decor');
+  if(!decor) return;
+  const width=decor.clientWidth||window.innerWidth||0;
+  const approxIconSlot=30; // icon + gap
+  const iconCount=Math.max(14, Math.ceil(width/approxIconSlot)+2);
+  const html=Array.from({length:iconCount},(_,i)=>{
+    const icon=EASTER_DECOR_SEQUENCE[i%EASTER_DECOR_SEQUENCE.length];
+    return `<span class="easter-icon">${icon}</span>`;
+  }).join('');
+  decor.innerHTML=html;
+}
+
 const resetLink=document.getElementById('reset-values-link');
 if(resetLink){
   resetLink.addEventListener('click', (e)=>{
@@ -552,6 +589,11 @@ if(resetLink){
 }
 
 loadState();
+if(localStorage.getItem(STORAGE_KEY)===null){
+  toggleEasterTheme(true);
+}
+window.addEventListener('resize', renderEasterDecor);
+renderEasterDecor();
 setModell(modell, true);
 setTab(activeTab);
 updateUI();
