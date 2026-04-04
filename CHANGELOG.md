@@ -2,6 +2,20 @@
 
 Denne changeloggen bruker datoformat: `YYYY-MM-DD`.
 
+## 2026-04-04
+
+### Endret
+- Presiserte i UI at gammel modell i 2026 påvirker 2027 kun via beregnede feriepenger.
+- Oppdaterte informasjonstekst i 2027-visningen for å forklare at koblingen går gjennom `fp27`, ikke direkte gjennom månedlig lønn i ny modell.
+
+### Testet
+- `node --check app.js` kjørt uten feil.
+
+### Oppdaterte filer
+- `app.js`
+- `index.html`
+- `CHANGELOG.md`
+
 ## 2026-04-03
 
 ### Endret

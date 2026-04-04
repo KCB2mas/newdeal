@@ -399,7 +399,7 @@ function updateUI(){
 
   document.getElementById('fp27-gml').textContent=kr(fp27);
   document.getElementById('info-2027').textContent=
-    `Feriepenger 2027: ${kr(fp27)} (12% av faktisk overgangsårslønn ekskl. feriepenger)`;
+    `Feriepenger 2027: ${kr(fp27)} (12% av faktisk overgangsårslønn ekskl. feriepenger). Gammel modell i 2026 påvirker 2027 kun via dette beløpet.`;
 
   document.getElementById('kpi-ny').textContent=kr(overgangsSum);
   const nyEksFpEl=document.getElementById('kpi-ny-eks-fp');
