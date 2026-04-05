@@ -418,23 +418,12 @@ function updateUI(){
     if(p.garantiForskudd>0){
       const diffUtenForskudd=diffOvergang-p.garantiForskudd;
       const retning=diffUtenForskudd>=0?'Ny modell er bedre':'Gammel modell er bedre';
-      diffForskuddEl.textContent=`(uten 1 mnd garantilønn på forskudd: ${diffUtenForskudd>=0?'+ ':'− '}${kr(Math.abs(diffUtenForskudd))} — ${retning})`;
-      diffForskuddEl.style.color=diffUtenForskudd>=0?'#1a7a3d':'#b91c1c';
+      const diffForskuddSign=diffUtenForskudd>=0?'+ ':'− ';
+      const diffForskuddColor=diffUtenForskudd>=0?'#1a7a3d':'#b91c1c';
+      diffForskuddEl.innerHTML=`<span class="kpi-subdiff-lbl">Reell differanse uten forskudd</span><span class="kpi-subdiff-val" style="color:${diffForskuddColor}">${diffForskuddSign}${kr(Math.abs(diffUtenForskudd))}</span><span class="kpi-subdiff-note">${retning}</span>`;
       diffForskuddEl.style.display='block';
     } else {
       diffForskuddEl.style.display='none';
-    }
-  }
-
-  const diffInklTillegg=overgangsSum-(gmlTotal26+8*p.tillegg);
-  const diffTilleggEl=document.getElementById('kpi-diff-tillegg');
-  if(diffTilleggEl){
-    if(p.tillegg>0){
-      diffTilleggEl.textContent=`(${diffInklTillegg>=0?'+ ':''}${kr(Math.abs(diffInklTillegg))} inkl. tillegg)`;
-      diffTilleggEl.style.color=diffInklTillegg>=0?'#1a7a3d':'#b91c1c';
-      diffTilleggEl.style.display='block';
-    } else {
-      diffTilleggEl.style.display='none';
     }
   }
 
