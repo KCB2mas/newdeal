@@ -420,7 +420,7 @@ function updateUI(){
       const retning=diffUtenForskudd>=0?'Ny modell er bedre':'Gammel modell er bedre';
       const diffForskuddSign=diffUtenForskudd>=0?'+ ':'− ';
       const diffForskuddColor=diffUtenForskudd>=0?'#1a7a3d':'#b91c1c';
-      diffForskuddEl.innerHTML=`<span class="kpi-subdiff-lbl">Reell differanse uten forskudd</span><span class="kpi-subdiff-val" style="color:${diffForskuddColor}">${diffForskuddSign}${kr(Math.abs(diffUtenForskudd))}</span><span class="kpi-subdiff-note">${retning}</span>`;
+      diffForskuddEl.innerHTML=`<span class="kpi-subdiff-lbl">Uten forskudd</span><span class="kpi-subdiff-val" style="color:${diffForskuddColor}">${diffForskuddSign}${kr(Math.abs(diffUtenForskudd))}</span><span class="kpi-subdiff-note">${retning}</span>`;
       diffForskuddEl.style.display='block';
     } else {
       diffForskuddEl.style.display='none';
