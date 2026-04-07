@@ -4,12 +4,12 @@ h1{font-size:20px;font-weight:500;margin-bottom:4px}
 .sub{font-size:13px;color:#666;margin-bottom:16px}
 .season-bar{display:flex;gap:10px;align-items:center;margin:-4px 0 14px}
 .season-toggle{padding:7px 12px;border-radius:999px;border:0.5px solid #d6d6cf;background:#fff;cursor:pointer;font-size:12px;color:#4f4f47;touch-action:manipulation}
-.season-toggle.active{background:#ffe693;border-color:#f0ca57;color:#6d4d00;font-weight:600}
+.season-toggle.active{background:#dcebd7;border-color:#9bc18f;color:#245537;font-weight:600}
 .season-note{font-size:12px;color:#777}
-.easter-decor{display:none;gap:10px;align-items:center;justify-content:flex-start;flex-wrap:nowrap;overflow:hidden;margin:-4px 0 12px;padding:8px 12px;border-radius:10px;border:0.5px dashed #f3c86e;background:linear-gradient(90deg,#fff7d8,#ffeccb)}
-.easter-icon{flex:0 0 auto;font-size:18px;line-height:1;animation:easterBob 2.8s ease-in-out infinite}
-.easter-icon:nth-child(2n){animation-delay:.4s}
-.easter-icon:nth-child(3n){animation-delay:.8s}
+.spring-decor{display:none;gap:10px;align-items:center;justify-content:flex-start;flex-wrap:nowrap;overflow:hidden;margin:-4px 0 12px;padding:8px 12px;border-radius:10px;border:0.5px dashed #bad7b7;background:linear-gradient(90deg,#eef8ea,#f7efe2)}
+.spring-icon{flex:0 0 auto;font-size:18px;line-height:1;animation:springBob 3.2s ease-in-out infinite}
+.spring-icon:nth-child(2n){animation-delay:.4s}
+.spring-icon:nth-child(3n){animation-delay:.8s}
 .layout{display:grid;grid-template-columns:270px 1fr;gap:16px;align-items:start}
 .lbl{font-size:12px;color:#666;margin-bottom:4px;display:block}
 .card{background:#fff;border:0.5px solid #e0e0da;border-radius:12px;padding:14px;margin-bottom:12px}
@@ -160,57 +160,57 @@ h1{font-size:20px;font-weight:500;margin-bottom:4px}
   input[type=range]{height:28px}
 }
 
-body.easter-theme{
-  background:linear-gradient(180deg,#fff5cc 0%,#ffe6cf 55%,#fff2df 100%);
+body.spring-theme{
+  background:linear-gradient(180deg,#eef6ea 0%,#f7f1e4 58%,#f6efe8 100%);
   position:relative;
 }
-body.easter-theme .sub{color:#76511b}
-body.easter-theme .season-note{color:#7b5a1f}
-body.easter-theme .easter-decor{display:flex}
-body.easter-theme .card{
-  background:#fffdf4;
-  border-color:#f3d8a0;
+body.spring-theme .sub{color:#49634d}
+body.spring-theme .season-note{color:#557056}
+body.spring-theme .spring-decor{display:flex}
+body.spring-theme .card{
+  background:#fbfdf8;
+  border-color:#d5e4cf;
 }
-body.easter-theme .kpi-card{
-  background:linear-gradient(180deg,#fff3c8,#ffe7b8);
+body.spring-theme .kpi-card{
+  background:linear-gradient(180deg,#edf5e8,#e6efe0);
 }
-body.easter-theme .kpi-subdiff{
-  background:#fff9e6;
-  border-color:#efcf82;
+body.spring-theme .kpi-subdiff{
+  background:#f9fcf6;
+  border-color:#c8dcc1;
 }
-body.easter-theme .kpi-subdiff-lbl{
-  color:#7a5a18;
+body.spring-theme .kpi-subdiff-lbl{
+  color:#49624d;
 }
-body.easter-theme .tab-btn.active{
-  background:#ffe08d;
-  border-color:#efbd43;
-  color:#6f500d;
+body.spring-theme .tab-btn.active{
+  background:#dbead8;
+  border-color:#9fc49d;
+  color:#285344;
 }
-body.easter-theme .tbl tr.total-row td{
-  background:#fff0bf;
+body.spring-theme .tbl tr.total-row td{
+  background:#eaf2e5;
 }
-body.easter-theme .tbl tr.special-row td{
-  background:#fff7dc;
+body.spring-theme .tbl tr.special-row td{
+  background:#f3f8ef;
 }
-body.easter-theme .info-box{
-  background:#fff2cd;
-  border-color:#f0cc73;
-  color:#7a5615;
+body.spring-theme .info-box{
+  background:#eef6ec;
+  border-color:#bfd8be;
+  color:#35604d;
 }
-body.easter-theme::before{
+body.spring-theme::before{
   content:"";
   position:fixed;
   inset:0;
   pointer-events:none;
-  opacity:.3;
+  opacity:.28;
   background-image:
-    radial-gradient(circle at 20px 20px,#ffd06c 0 6px,transparent 7px),
-    radial-gradient(circle at 55px 45px,#ffc1b2 0 5px,transparent 6px),
-    radial-gradient(circle at 85px 15px,#ffef9f 0 4px,transparent 5px);
-  background-size:120px 70px;
+    radial-gradient(circle at 24px 24px,#d2e7bf 0 6px,transparent 7px),
+    radial-gradient(circle at 58px 44px,#f3d9c8 0 5px,transparent 6px),
+    radial-gradient(circle at 90px 18px,#e8efcf 0 4px,transparent 5px);
+  background-size:130px 78px;
 }
 
-@keyframes easterBob{
+@keyframes springBob{
   0%,100%{transform:translateY(0)}
-  50%{transform:translateY(-3px)}
+  50%{transform:translateY(-2px)}
 }

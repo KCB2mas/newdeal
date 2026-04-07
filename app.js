@@ -2,7 +2,7 @@ const ARS_DAGER = 260;
 const G_DEFAULT = 136000; // 1. mai 2026
 const STORAGE_KEY = 'newdeal-state-v1';
 const DEFAULT_FRAVAR_VERSION = 2;
-const EASTER_DECOR_SEQUENCE = ['🐰','🥚','🐥','🌷','🥚','🐥','🌼','🥚'];
+const SPRING_DECOR_SEQUENCE = ['🌿','🌷','🍃','🌼','🌱','🍃','🌸','🌿'];
 
 const MONTHS_K = ['Jan','Feb','Mar','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Des'];
 const ARB_DAGER_2026 = [21,20,22,19,18,22,23,21,22,22,21,20];
@@ -113,7 +113,7 @@ function saveState(){
       defaultFravarVersion: DEFAULT_FRAVAR_VERSION,
       modell,
       activeTab,
-      easterTheme: document.body.classList.contains('easter-theme'),
+      springTheme: document.body.classList.contains('spring-theme'),
       values,
       fravær2026,
       fravær2027
@@ -162,9 +162,11 @@ function loadState(){
       if(isFravarEmpty(fravær2027)) seedDefaultFravar(fravær2027);
     }
 
-    if(state?.easterTheme===true) toggleEasterTheme(true);
-    else if(state?.easterTheme===false) toggleEasterTheme(false);
-    else toggleEasterTheme(true);
+    const savedSpringTheme = state?.springTheme;
+    const savedLegacyTheme = state?.easterTheme;
+    if(savedSpringTheme===true || (savedSpringTheme===undefined && savedLegacyTheme===true)) toggleSpringTheme(true);
+    else if(savedSpringTheme===false || (savedSpringTheme===undefined && savedLegacyTheme===false)) toggleSpringTheme(false);
+    else toggleSpringTheme(true);
 
     if(state?.modell==='fp' || state?.modell==='fl') modell=state.modell;
     if(['tabell','fravar','fravar2027','ar2027','graf'].includes(state?.activeTab)) activeTab=state.activeTab;
@@ -538,33 +540,33 @@ function renderChart(rows){
   });
 }
 
-function toggleEasterTheme(force){
+function toggleSpringTheme(force){
   const on = typeof force==='boolean'
     ? force
-    : !document.body.classList.contains('easter-theme');
-  document.body.classList.toggle('easter-theme', on);
+    : !document.body.classList.contains('spring-theme');
+  document.body.classList.toggle('spring-theme', on);
 
-  const btn=document.getElementById('easter-theme-toggle');
+  const btn=document.getElementById('spring-theme-toggle');
   if(btn){
     btn.classList.toggle('active', on);
     btn.setAttribute('aria-pressed', on?'true':'false');
-    btn.textContent=on?'Påsketema: På':'Påsketema: Av';
+    btn.textContent=on?'Vårtema: På':'Vårtema: Av';
   }
-  const note=document.getElementById('easter-theme-note');
-  if(note) note.textContent=on?'Påskefarger aktivert':'Aktiver påskefarger';
-  if(on) renderEasterDecor();
+  const note=document.getElementById('spring-theme-note');
+  if(note) note.textContent=on?'Vårfarger aktivert':'Aktiver vårfarger';
+  if(on) renderSpringDecor();
   saveState();
 }
 
-function renderEasterDecor(){
-  const decor=document.getElementById('easter-decor');
+function renderSpringDecor(){
+  const decor=document.getElementById('spring-decor');
   if(!decor) return;
   const width=decor.clientWidth||window.innerWidth||0;
   const approxIconSlot=30; // icon + gap
   const iconCount=Math.max(14, Math.ceil(width/approxIconSlot)+2);
   const html=Array.from({length:iconCount},(_,i)=>{
-    const icon=EASTER_DECOR_SEQUENCE[i%EASTER_DECOR_SEQUENCE.length];
-    return `<span class="easter-icon">${icon}</span>`;
+    const icon=SPRING_DECOR_SEQUENCE[i%SPRING_DECOR_SEQUENCE.length];
+    return `<span class="spring-icon">${icon}</span>`;
   }).join('');
   decor.innerHTML=html;
 }
@@ -579,10 +581,10 @@ if(resetLink){
 
 loadState();
 if(localStorage.getItem(STORAGE_KEY)===null){
-  toggleEasterTheme(true);
+  toggleSpringTheme(true);
 }
-window.addEventListener('resize', renderEasterDecor);
-renderEasterDecor();
+window.addEventListener('resize', renderSpringDecor);
+renderSpringDecor();
 setModell(modell, true);
 setTab(activeTab);
 updateUI();

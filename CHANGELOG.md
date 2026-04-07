@@ -2,6 +2,22 @@
 
 Denne changeloggen bruker datoformat: `YYYY-MM-DD`.
 
+## 2026-04-07
+
+### Endret
+- Fjernet påsketema og erstattet det med et roligere vårtema i UI.
+- Oppdaterte toggle-tekst, dekorlinje og fargepalett til våruttrykk.
+- Beholdt støtte for tidligere lagret temavalg, slik at eksisterende brukere migreres sømløst til vårtema.
+
+### Testet
+- `node --check app.js` kjørt uten feil.
+
+### Oppdaterte filer
+- `app.js`
+- `index.html`
+- `style.css`
+- `CHANGELOG.md`
+
 ## 2026-04-04
 
 ### Endret
