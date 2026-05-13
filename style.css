@@ -18,7 +18,10 @@ h1{font-size:20px;font-weight:500;margin-bottom:4px}
 .model-btn.active{background:#f0f0ec;color:#1a1a18;font-weight:500;border-color:#bbb}
 .inp{width:100%;padding:8px 10px;border-radius:8px;border:0.5px solid #ccc;background:#fff;color:#1a1a18;font-size:16px}
 .inp-ro{width:100%;padding:8px 10px;border-radius:8px;border:0.5px solid #eee;background:#f5f5f3;color:#666;font-size:14px;cursor:default}
+.inp-help{font-size:11px;color:#777;line-height:1.35;margin-top:4px}
 .note{font-size:11px;color:#888;font-style:italic;margin-top:8px}
+.change-grid{display:grid;grid-template-columns:1fr;gap:10px}
+.change-block{display:flex;flex-direction:column;gap:10px;padding:10px;border-radius:10px;background:#f7f7f4;border:0.5px solid #e4e4dd}
 .kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px}
 .kpi-card{background:#f0f0ec;border-radius:8px;padding:12px}
 .kpi-lbl{font-size:11px;color:#666;margin-bottom:2px}
@@ -170,6 +173,10 @@ body.spring-theme .spring-decor{display:flex}
 body.spring-theme .card{
   background:#fbfdf8;
   border-color:#d5e4cf;
+}
+body.spring-theme .change-block{
+  background:#f3f8ef;
+  border-color:#d8e6d2;
 }
 body.spring-theme .kpi-card{
   background:linear-gradient(180deg,#edf5e8,#e6efe0);

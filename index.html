@@ -43,6 +43,7 @@
         <div>
           <span class="lbl">Innslagspunkt <span style="font-weight:400;color:#aaa">= fastlønn × stilling × 1,5</span></span>
           <div class="inp-ro" id="innslagspunkt-vis">–</div>
+          <div class="inp-help" id="innslagspunkt-note" style="display:none"></div>
         </div>
         <div>
           <span class="lbl">Provisjonssats gml modell: <strong id="prov-val">15%</strong></span>
@@ -57,6 +58,49 @@
           <span class="lbl">Månedlig garanti ny modell (kr)</span>
           <div class="inp-ro" id="mnd-garanti-vis">–</div>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="section-hdr">Endringer i 2026</div>
+    <div class="inp-help" style="margin-bottom:10px">Brukes fra valgt opptjeningsmåned og videre, også i 2027.</div>
+    <div class="change-grid">
+      <div class="change-block">
+        <div><span class="lbl">Ny fastlønn/mnd (kr)</span><input class="inp" type="number" inputmode="numeric" pattern="[0-9]*" id="fastlonn-endring" value="" placeholder="Tomt = ingen endring" onchange="updateUI()"></div>
+        <div><span class="lbl">Gjelder fra</span><select class="inp" id="fastlonn-fra" onchange="updateUI()">
+          <option value="">Ingen endring</option>
+          <option value="0">Januar 2026</option>
+          <option value="1">Februar 2026</option>
+          <option value="2">Mars 2026</option>
+          <option value="3">April 2026</option>
+          <option value="4">Mai 2026</option>
+          <option value="5">Juni 2026</option>
+          <option value="6">Juli 2026</option>
+          <option value="7">August 2026</option>
+          <option value="8">September 2026</option>
+          <option value="9">Oktober 2026</option>
+          <option value="10">November 2026</option>
+          <option value="11">Desember 2026</option>
+        </select></div>
+      </div>
+      <div class="change-block">
+        <div><span class="lbl">Ny timepris (kr)</span><input class="inp" type="number" inputmode="numeric" pattern="[0-9]*" id="timepris-endring" value="" placeholder="Tomt = ingen endring" onchange="updateUI()"></div>
+        <div><span class="lbl">Gjelder fra</span><select class="inp" id="timepris-fra" onchange="updateUI()">
+          <option value="">Ingen endring</option>
+          <option value="0">Januar 2026</option>
+          <option value="1">Februar 2026</option>
+          <option value="2">Mars 2026</option>
+          <option value="3">April 2026</option>
+          <option value="4">Mai 2026</option>
+          <option value="5">Juni 2026</option>
+          <option value="6">Juli 2026</option>
+          <option value="7">August 2026</option>
+          <option value="8">September 2026</option>
+          <option value="9">Oktober 2026</option>
+          <option value="10">November 2026</option>
+          <option value="11">Desember 2026</option>
+        </select></div>
       </div>
     </div>
   </div>

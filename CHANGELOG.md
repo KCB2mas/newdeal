@@ -8,6 +8,13 @@ Denne changeloggen bruker datoformat: `YYYY-MM-DD`.
 - Fjernet påsketema og erstattet det med et roligere vårtema i UI.
 - Oppdaterte toggle-tekst, dekorlinje og fargepalett til våruttrykk.
 - Beholdt støtte for tidligere lagret temavalg, slik at eksisterende brukere migreres sømløst til vårtema.
+- La til støtte for endringer i fastlønn og timepris i løpet av 2026:
+  - Eget felt for ny verdi og egen `gjelder fra`-måned for både fastlønn og timepris.
+  - Endringene brukes fra valgt opptjeningsmåned og videreføres til 2027.
+  - Gammel modell, provisjonsterskel og 2027-feriepenger beregnes nå med riktige månedsverdier etter endringsdato.
+- Oppdaterte parameter-UI for bedre oversikt:
+  - Ny seksjon `Endringer i 2026`.
+  - Innslagspunkt viser nå også hjelpetekst når fastlønn endres senere i året.
 
 ### Testet
 - `node --check app.js` kjørt uten feil.

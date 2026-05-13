@@ -101,7 +101,8 @@ function saveState(){
     const ids = [
       'timepris','fastlonn','tillegg','stillingsprosent','provisjonssats',
       'feriedager-igjen','feriepenger','g-belop','ny-prosentsats',
-      'tilvalg-m3','tilvalg-p2','tilvalg-p4'
+      'tilvalg-m3','tilvalg-p2','tilvalg-p4',
+      'fastlonn-endring','fastlonn-fra','timepris-endring','timepris-fra'
     ];
     const values = {};
     ids.forEach(id=>{
@@ -235,6 +236,10 @@ function setTab(t){
 function getParams(){
   const timepris=+document.getElementById('timepris').value||0;
   const fastlonn=+document.getElementById('fastlonn').value||0;
+  const fastlonnEndring=+document.getElementById('fastlonn-endring').value||0;
+  const fastlonnFraRaw=document.getElementById('fastlonn-fra').value;
+  const timeprisEndring=+document.getElementById('timepris-endring').value||0;
+  const timeprisFraRaw=document.getElementById('timepris-fra').value;
   const tillegg=+document.getElementById('tillegg').value||0;
   const gBelop=+document.getElementById('g-belop').value||G_DEFAULT;
   const seksG=gBelop*6;
@@ -263,9 +268,35 @@ function getParams(){
   const garantiTrekkDag=seksG/ARS_DAGER*stilling*garantiGulvFaktor;
   const sykKompDag=garantiTrekkDag;
   const spesialMnd=4;
+  const fastlonnChange=(fastlonnFraRaw!==''&&fastlonnEndring>0)
+    ?{value:fastlonnEndring,from:+fastlonnFraRaw}
+    :null;
+  const timeprisChange=(timeprisFraRaw!==''&&timeprisEndring>0)
+    ?{value:timeprisEndring,from:+timeprisFraRaw}
+    :null;
   return{timepris,fastlonn,tillegg,stilling,provSats,feriepenger,nyPct:effektivSats,
     fastlonnActual,innslagspunkt,ferietrekkDag,ferietrekkGml,ferieJusteringNy,
-    sykKompDag,garantilonn,garantiForskudd,garantiTrekkDag,garantiGulvFaktor,spesialMnd};
+    sykKompDag,garantilonn,garantiForskudd,garantiTrekkDag,garantiGulvFaktor,spesialMnd,
+    fastlonnChange,timeprisChange,feriedagerIgjen};
+}
+
+function gjelderFraEndring(change, monthIndex, is2027){
+  if(!change) return false;
+  return is2027 || monthIndex>=change.from;
+}
+
+function hentManedsverdier(p, monthIndex, is2027=false){
+  const fastlonnMnd=gjelderFraEndring(p.fastlonnChange, monthIndex, is2027)
+    ? p.fastlonnChange.value
+    : p.fastlonn;
+  const timeprisMnd=gjelderFraEndring(p.timeprisChange, monthIndex, is2027)
+    ? p.timeprisChange.value
+    : p.timepris;
+  const fastlonnActualMnd=fastlonnMnd*p.stilling;
+  const innslagspunktMnd=fastlonnActualMnd*1.5;
+  const ferietrekkBasisMnd=modell==='fp'?fastlonnActualMnd:fastlonnMnd;
+  const ferietrekkDagMnd=ferietrekkBasisMnd*12/260;
+  return{fastlonnMnd,timeprisMnd,fastlonnActualMnd,innslagspunktMnd,ferietrekkDagMnd};
 }
 
 function beregnAar(p, {feriepengerOverride, is2027=false, fravarData=fravær2026, arbDager=ARB_DAGER_2026} = {}){
@@ -274,28 +305,31 @@ function beregnAar(p, {feriepengerOverride, is2027=false, fravarData=fravær2026
     const arb=arbDager[i];
     const f=fravarData[i];
     const hasSpesial = !is2027 && i===p.spesialMnd;
+    const maned=hentManedsverdier(p, i, is2027);
+    const ferietrekkGmlSpesial=Math.max(0, maned.ferietrekkDagMnd*(25-p.feriedagerIgjen));
+    const ferieJusteringNySpesial=(p.feriedagerIgjen-25)*maned.ferietrekkDagMnd;
     const timer=arb*T_DAG*p.stilling;
     const faktTimer=Math.max(0,timer-(f.ferie+f.syk+f.uten)*T_DAG);
-    const omsetning=faktTimer*p.timepris;
-    const prov=modell==='fp'?Math.max(0,omsetning-p.innslagspunkt)*p.provSats*0.7825:0;
+    const omsetning=faktTimer*maned.timeprisMnd;
+    const prov=modell==='fp'?Math.max(0,omsetning-maned.innslagspunktMnd)*p.provSats*0.7825:0;
     // Tillegg bortfaller fra og med mai 2026 (opptjent mai = utbetalt juni).
     const tilleggMnd=(is2027||i>=4)?0:p.tillegg;
 
     let gml, maiOvergang;
     if(modell==='fp'){
       if(hasSpesial){
-        gml=p.fastlonn+tilleggMnd+prov+p.feriepenger-25*p.ferietrekkDag;
-        maiOvergang=prov+p.feriepenger-p.ferietrekkGml+p.garantiForskudd;
+        gml=maned.fastlonnMnd+tilleggMnd+prov+p.feriepenger-25*maned.ferietrekkDagMnd;
+        maiOvergang=prov+p.feriepenger-ferietrekkGmlSpesial+p.garantiForskudd;
       } else {
-        gml=p.fastlonn+tilleggMnd+prov+(is2027&&i===p.spesialMnd?fp-25*p.ferietrekkDag:0);
+        gml=maned.fastlonnMnd+tilleggMnd+prov+(is2027&&i===p.spesialMnd?fp-25*maned.ferietrekkDagMnd:0);
         maiOvergang=null;
       }
     } else {
       if(hasSpesial){
-        gml=p.fastlonn+tilleggMnd+p.feriepenger-25*p.ferietrekkDag;
-        maiOvergang=p.feriepenger-p.ferietrekkGml+p.garantiForskudd;
+        gml=maned.fastlonnMnd+tilleggMnd+p.feriepenger-25*maned.ferietrekkDagMnd;
+        maiOvergang=p.feriepenger-ferietrekkGmlSpesial+p.garantiForskudd;
       } else {
-        gml=p.fastlonn+tilleggMnd+(is2027&&i===p.spesialMnd?fp-25*p.ferietrekkDag:0);
+        gml=maned.fastlonnMnd+tilleggMnd+(is2027&&i===p.spesialMnd?fp-25*maned.ferietrekkDagMnd:0);
         maiOvergang=null;
       }
     }
@@ -311,13 +345,14 @@ function beregnAar(p, {feriepengerOverride, is2027=false, fravarData=fravær2026
     if(f.syk>0 && f.uten>0){
       nyMedGulv=Math.min(nyMedGulv,p.garantilonn);
     }
-    const ferieJustering=hasSpesial?p.ferieJusteringNy:0;
+    const ferieJustering=hasSpesial?ferieJusteringNySpesial:0;
     const ny=hasSpesial
       ?(maiOvergang+ferieJustering)
       :((is2027&&i===p.spesialMnd)?nyMedGulv+fp:nyMedGulv);
     const fase=is2027?'ny':i<p.spesialMnd?'gml':i===p.spesialMnd?'overgang':'ny';
 
-    return{arb,faktTimer,omsetning,gml,ny,diff:ny-gml,erSpesial:hasSpesial,garantiAndel,fase};
+    return{arb,faktTimer,omsetning,gml,ny,diff:ny-gml,erSpesial:hasSpesial,garantiAndel,fase,
+      timepris:maned.timeprisMnd,fastlonn:maned.fastlonnMnd,innslagspunkt:maned.innslagspunktMnd};
   });
 }
 
@@ -328,6 +363,7 @@ function updateUI(){
   }
 
   const p=getParams();
+  const fmtMnd=(idx)=>`${MONTHS_K[idx]} 2026`;
   const stillingEl=document.getElementById('stilling-val');
   if(stillingEl) stillingEl.textContent=Math.round((+document.getElementById('stillingsprosent').value||1)*100)+'%';
   const provEl=document.getElementById('prov-val');
@@ -336,6 +372,17 @@ function updateUI(){
   if(nyPctEl) nyPctEl.textContent=Math.round((+document.getElementById('ny-prosentsats').value||0.46)*100)+'%';
 
   document.getElementById('innslagspunkt-vis').textContent=Math.round(p.innslagspunkt).toLocaleString('nb-NO')+' kr';
+  const innslagspunktNote=document.getElementById('innslagspunkt-note');
+  if(innslagspunktNote){
+    if(p.fastlonnChange){
+      const nyFastlonnActual=p.fastlonnChange.value*p.stilling;
+      const nyttInnslagspunkt=Math.round(nyFastlonnActual*1.5).toLocaleString('nb-NO')+' kr';
+      innslagspunktNote.textContent=`Fra ${fmtMnd(p.fastlonnChange.from)}: ${nyttInnslagspunkt}`;
+      innslagspunktNote.style.display='block';
+    } else {
+      innslagspunktNote.style.display='none';
+    }
+  }
   const mndGarantiEl=document.getElementById('mnd-garanti-vis');
   if(mndGarantiEl) mndGarantiEl.textContent=kr(p.garantilonn);
   const disclaimer85gEl=document.getElementById('disclaimer-85g');
@@ -359,7 +406,7 @@ function updateUI(){
 
   // "Feriedager igjen 1. juni" gjelder kun 2026-visningen og skal ikke påvirke 2027.
   // Bruk derfor et nøytralt 2026-grunnlag uten denne justeringen ved beregning av 2027-feriepenger.
-  const p2027Basis={...p, ferietrekkGml: 0, ferieJusteringNy: 0};
+  const p2027Basis={...p, feriedagerIgjen: 25, ferietrekkGml: 0, ferieJusteringNy: 0};
   const rows26For2027Basis=beregnAar(p2027Basis, {fravarData: fravær2026, arbDager: ARB_DAGER_2026});
   const sumJanAprGml26Basis=rows26For2027Basis.filter(r=>r.fase==='gml').reduce((s,r)=>s+r.gml,0);
   const sumMaiOvergang26Basis=rows26For2027Basis.find(r=>r.fase==='overgang')?.ny||0;
