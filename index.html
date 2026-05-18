@@ -55,8 +55,9 @@
         <div><span class="lbl">Feriepenger fra 2025 (kr)</span><input class="inp" type="number" inputmode="numeric" pattern="[0-9]*" id="feriepenger" value="100000" onchange="updateUI()"></div>
         <div><span class="lbl">Estimert G pr 1.5.26 (kr)</span><input class="inp" type="number" inputmode="numeric" pattern="[0-9]*" id="g-belop" value="136000" onchange="updateUI()"></div>
         <div>
-          <span class="lbl">Månedlig garanti ny modell (kr)</span>
+          <span class="lbl">Garantilønn fra 1.6.26 (kr)</span>
           <div class="inp-ro" id="mnd-garanti-vis">–</div>
+          <div class="inp-help">Brukes også i beregningen som fastlønn fra juni 2026 - også for gammel modell.</div>
         </div>
       </div>
     </div>
@@ -66,24 +67,6 @@
     <div class="section-hdr">Endringer i 2026</div>
     <div class="inp-help" style="margin-bottom:10px">Brukes fra valgt opptjeningsmåned og videre, også i 2027.</div>
     <div class="change-grid">
-      <div class="change-block">
-        <div><span class="lbl">Ny fastlønn/mnd (kr)</span><input class="inp" type="number" inputmode="numeric" pattern="[0-9]*" id="fastlonn-endring" value="" placeholder="Tomt = ingen endring" onchange="updateUI()"></div>
-        <div><span class="lbl">Gjelder fra</span><select class="inp" id="fastlonn-fra" onchange="updateUI()">
-          <option value="">Ingen endring</option>
-          <option value="0">Januar 2026</option>
-          <option value="1">Februar 2026</option>
-          <option value="2">Mars 2026</option>
-          <option value="3">April 2026</option>
-          <option value="4">Mai 2026</option>
-          <option value="5">Juni 2026</option>
-          <option value="6">Juli 2026</option>
-          <option value="7">August 2026</option>
-          <option value="8">September 2026</option>
-          <option value="9">Oktober 2026</option>
-          <option value="10">November 2026</option>
-          <option value="11">Desember 2026</option>
-        </select></div>
-      </div>
       <div class="change-block">
         <div><span class="lbl">Ny timepris (kr)</span><input class="inp" type="number" inputmode="numeric" pattern="[0-9]*" id="timepris-endring" value="" placeholder="Tomt = ingen endring" onchange="updateUI()"></div>
         <div><span class="lbl">Gjelder fra</span><select class="inp" id="timepris-fra" onchange="updateUI()">
@@ -140,6 +123,28 @@
         <div class="inp-ro" id="fp27-gml">–</div>
       </div>
       <div style="font-size:11px;color:#888;font-style:italic">12% av faktisk 2026-lønn ekskl. feriepenger</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="section-hdr">Break-even for −3% option (8,5G garantilønn)</div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div style="font-size:11px;color:#888;margin-bottom:6px">
+        Hvor mange <strong>måneder</strong> sykemelding per år trengs for at −3% option skal lønne seg?
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;text-align:center">
+        <div style="border:1px solid #e5e5df;border-radius:6px;padding:8px;background:#fafaf7">
+          <div style="font-size:10px;color:#666;margin-bottom:4px;font-weight:500">Breakeven måneder/år:</div>
+          <div id="breakeven-months" style="font-size:18px;font-weight:600;color:#d97706">–</div>
+        </div>
+        <div style="border:1px solid #e5e5df;border-radius:6px;padding:8px;background:#fafaf7">
+          <div style="font-size:10px;color:#666;margin-bottom:4px;font-weight:500">Breakeven dager/år:</div>
+          <div id="breakeven-days" style="font-size:18px;font-weight:600;color:#d97706">–</div>
+        </div>
+      </div>
+      <div style="padding:10px;background:#fffbeb;border-radius:6px;border-left:4px solid #fcd34d">
+        <div id="breakeven-explanation" style="font-size:11px;color:#78350f;line-height:1.5">–</div>
+      </div>
     </div>
   </div>
 
